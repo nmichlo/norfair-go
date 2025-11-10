@@ -127,11 +127,11 @@ func TestTranslationTransformationGetter_SimpleModeFind(t *testing.T) {
 
 	// Current points: 4 points moved by (5, 5), 1 outlier moved by (1, 1)
 	currPts := mat.NewDense(5, 2, []float64{
-		5, 5,    // moved by (5, 5)
-		15, 15,  // moved by (5, 5)
-		25, 25,  // moved by (5, 5)
-		35, 35,  // moved by (5, 5)
-		41, 41,  // outlier: moved by (1, 1)
+		5, 5, // moved by (5, 5)
+		15, 15, // moved by (5, 5)
+		25, 25, // moved by (5, 5)
+		35, 35, // moved by (5, 5)
+		41, 41, // outlier: moved by (1, 1)
 	})
 
 	updateRef, trans := getter.Call(currPts, prevPts)
@@ -242,9 +242,9 @@ func TestTranslationTransformationGetter_ReferenceUpdate(t *testing.T) {
 		14, 14,
 		15, 15,
 		16, 16,
-		5, 7,   // outlier
-		6, 3,   // outlier
-		9, 12,  // outlier
+		5, 7, // outlier
+		6, 3, // outlier
+		9, 12, // outlier
 	})
 
 	updateRef, _ := getter.Call(currPts, prevPts)
@@ -597,15 +597,15 @@ func TestHomographyTransformationGetter_PerfectCorrespondence(t *testing.T) {
 	// Create NON-COLLINEAR points with perfect translation by (10, 20)
 	// Points form a rectangle + center point (not all on same line)
 	prevPts := mat.NewDense(5, 2, []float64{
-		0, 0,      // Bottom-left
-		100, 0,    // Bottom-right
-		100, 80,   // Top-right
-		0, 80,     // Top-left
-		50, 40,    // Center
+		0, 0, // Bottom-left
+		100, 0, // Bottom-right
+		100, 80, // Top-right
+		0, 80, // Top-left
+		50, 40, // Center
 	})
 
 	currPts := mat.NewDense(5, 2, []float64{
-		10, 20,    // Translation: +10, +20
+		10, 20, // Translation: +10, +20
 		110, 20,
 		110, 100,
 		10, 100,
@@ -666,25 +666,25 @@ func TestHomographyTransformationGetter_WithOutliers(t *testing.T) {
 
 	// 8 points: 6 inliers + 2 outliers
 	prevPts := mat.NewDense(8, 2, []float64{
-		0, 0,      // Inlier
-		100, 0,    // Inlier
-		100, 80,   // Inlier
-		0, 80,     // Inlier
-		50, 40,    // Inlier
-		25, 60,    // Inlier
-		200, 200,  // Outlier
-		300, 300,  // Outlier
+		0, 0, // Inlier
+		100, 0, // Inlier
+		100, 80, // Inlier
+		0, 80, // Inlier
+		50, 40, // Inlier
+		25, 60, // Inlier
+		200, 200, // Outlier
+		300, 300, // Outlier
 	})
 
 	currPts := mat.NewDense(8, 2, []float64{
-		10, 20,    // Inlier (translation +10, +20)
-		110, 20,   // Inlier
-		110, 100,  // Inlier
-		10, 100,   // Inlier
-		60, 60,    // Inlier
-		35, 80,    // Inlier
-		50, 50,    // Outlier (wrong correspondence)
-		-100, 0,   // Outlier (wrong correspondence)
+		10, 20, // Inlier (translation +10, +20)
+		110, 20, // Inlier
+		110, 100, // Inlier
+		10, 100, // Inlier
+		60, 60, // Inlier
+		35, 80, // Inlier
+		50, 50, // Outlier (wrong correspondence)
+		-100, 0, // Outlier (wrong correspondence)
 	})
 
 	updateRef, trans := getter.Call(currPts, prevPts)
@@ -736,7 +736,7 @@ func TestHomographyTransformationGetter_Accumulation(t *testing.T) {
 	// Second transformation: translate by another (5, 10) from first transformed positions
 	prevPts2 := currPts1 // Use previous current points as new previous
 	currPts2 := mat.NewDense(5, 2, []float64{
-		15, 30,    // Additional +5, +10
+		15, 30, // Additional +5, +10
 		115, 30,
 		115, 110,
 		15, 110,
@@ -853,9 +853,9 @@ func TestMotionEstimator_FirstFrameInitialization(t *testing.T) {
 	// Fill with some pattern
 	for i := 0; i < 100; i++ {
 		for j := 0; j < 100; j++ {
-			frame.SetUCharAt(i, j*3, uint8(i+j))     // B
-			frame.SetUCharAt(i, j*3+1, uint8(i+j))   // G
-			frame.SetUCharAt(i, j*3+2, uint8(i+j))   // R
+			frame.SetUCharAt(i, j*3, uint8(i+j))   // B
+			frame.SetUCharAt(i, j*3+1, uint8(i+j)) // G
+			frame.SetUCharAt(i, j*3+2, uint8(i+j)) // R
 		}
 	}
 
@@ -1033,9 +1033,9 @@ func createFrameWithPattern(offsetX, offsetY, height, width int) gocv.Mat {
 			}
 
 			// Set all channels to same value (grayscale)
-			frame.SetUCharAt(i, j*3, value)     // B
-			frame.SetUCharAt(i, j*3+1, value)   // G
-			frame.SetUCharAt(i, j*3+2, value)   // R
+			frame.SetUCharAt(i, j*3, value)   // B
+			frame.SetUCharAt(i, j*3+1, value) // G
+			frame.SetUCharAt(i, j*3+2, value) // R
 		}
 	}
 

@@ -1280,7 +1280,6 @@ func TestMOTAccumulator_EmptyFrames(t *testing.T) {
 //	distances = compute_iou_distances(gt_bboxes, pred_bboxes)
 //	acc.update([1, 2], [1, 2], distances)
 //	# Perfect tracking: MOTA = 1.0, all matches, no FP, no misses, no switches
-//
 func TestMOTAccumulator_PerfectTracking(t *testing.T) {
 	acc := motmetrics.NewMOTAccumulator("perfect_tracking")
 
@@ -1344,7 +1343,6 @@ func TestMOTAccumulator_PerfectTracking(t *testing.T) {
 //	distances = compute_iou_distances(gt_bboxes, pred_bboxes)
 //	acc.update([1], [1, 2], distances)
 //	# Result: 1 match, 1 false positive
-//
 func TestMOTAccumulator_FalsePositives(t *testing.T) {
 	acc := motmetrics.NewMOTAccumulator("false_positives")
 
@@ -1389,7 +1387,6 @@ func TestMOTAccumulator_FalsePositives(t *testing.T) {
 //	distances = compute_iou_distances(gt_bboxes, pred_bboxes)
 //	acc.update([1, 2], [1], distances)
 //	# Result: 1 match, 1 miss
-//
 func TestMOTAccumulator_Misses(t *testing.T) {
 	acc := motmetrics.NewMOTAccumulator("misses")
 
@@ -1433,7 +1430,6 @@ func TestMOTAccumulator_Misses(t *testing.T) {
 //	# Frame 2: GT object 1 now matches pred object 2 (ID switch)
 //	acc.update([1], [2], distances_frame2)
 //	# Result: ID switch detected when same GT object gets different pred ID
-//
 func TestMOTAccumulator_IDSwitches(t *testing.T) {
 	acc := motmetrics.NewMOTAccumulator("id_switches")
 
@@ -1491,7 +1487,6 @@ func TestMOTAccumulator_IDSwitches(t *testing.T) {
 //	# Compute summary metrics
 //	mh = mm.metrics.create()
 //	summary = mh.compute(acc, metrics=['mota', 'motp', 'precision', 'recall'])
-//
 func TestMOTAccumulator_MultiFrame(t *testing.T) {
 	acc := motmetrics.NewMOTAccumulator("multi_frame")
 
@@ -1747,9 +1742,9 @@ func TestAccumulators_ComputeMetrics_MOTP(t *testing.T) {
 
 	// Predictions with slight offsets
 	predBBoxes := [][]float64{
-		{100, 100, 200, 200},   // Perfect match (distance 0.0)
-		{310, 310, 410, 410},   // Partial overlap
-		{550, 550, 650, 650},   // Partial overlap
+		{100, 100, 200, 200}, // Perfect match (distance 0.0)
+		{310, 310, 410, 410}, // Partial overlap
+		{550, 550, 650, 650}, // Partial overlap
 	}
 	predIDs := []int{10, 20, 30}
 

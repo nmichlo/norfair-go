@@ -233,11 +233,11 @@ type OptimizedKalmanFilter struct {
 
 // OptimizedKalmanFilterFactory creates OptimizedKalmanFilter instances
 type OptimizedKalmanFilterFactory struct {
-	RMult             float64
-	QMult             float64
-	PosVariance       float64
-	PosVelCovariance  float64
-	VelVariance       float64
+	RMult            float64
+	QMult            float64
+	PosVariance      float64
+	PosVelCovariance float64
+	VelVariance      float64
 }
 
 // NewOptimizedKalmanFilterFactory creates a factory with default parameters

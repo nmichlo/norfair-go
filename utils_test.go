@@ -271,9 +271,9 @@ func TestGetCutout_OutOfBounds(t *testing.T) {
 	// Define points that extend beyond image bounds
 	points := mat.NewDense(4, 2, []float64{
 		-10.0, -10.0, // Out of bounds (negative)
-		50.0, 50.0,   // In bounds
-		150.0, 50.0,  // Out of bounds (too large)
-		50.0, 150.0,  // Out of bounds (too large)
+		50.0, 50.0, // In bounds
+		150.0, 50.0, // Out of bounds (too large)
+		50.0, 150.0, // Out of bounds (too large)
 	})
 
 	// Extract cutout

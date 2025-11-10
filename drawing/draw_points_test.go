@@ -249,7 +249,7 @@ func TestDrawPoints_OnlyLabels(t *testing.T) {
 		&frame,
 		[]interface{}{drawable},
 		nil, nil, nil,
-		true,  // drawLabels
+		true, // drawLabels
 		nil,
 		false, // drawIDs
 		true, nil, nil, true, false,
@@ -553,10 +553,10 @@ func TestDrawPoints_BoundaryPoints(t *testing.T) {
 
 	// Points at frame boundaries
 	points := mat.NewDense(4, 2, []float64{
-		0, 0,           // Top-left
-		639, 0,         // Top-right
-		0, 479,         // Bottom-left
-		639, 479,       // Bottom-right
+		0, 0, // Top-left
+		639, 0, // Top-right
+		0, 479, // Bottom-left
+		639, 479, // Bottom-right
 	})
 	drawable, _ := NewDrawable(points, nil, nil, nil, nil)
 
@@ -635,7 +635,6 @@ func TestDrawPoints_MultipleObjects(t *testing.T) {
 //	    obj2 = Drawable(points=np.array([[400, 300], [450, 350]], dtype=np.float64), live_points=np.array([True, True]))
 //	    draw_points(frame, drawables=[obj2], color="blue", draw_labels=False, draw_ids=False)
 //	    cv2.imwrite("python_test4_direct_color.png", frame)
-//
 func TestDrawPoints_DirectColor_GoldenImage(t *testing.T) {
 	frame := gocv.NewMatWithSize(480, 640, gocv.MatTypeCV8UC3)
 	defer frame.Close()

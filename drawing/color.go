@@ -18,7 +18,6 @@ type Color = color.Color
 
 // Palette manages color selection for drawing tracked objects.
 // Uses deterministic hashing to assign colors based on object IDs.
-//
 type Palette struct {
 	colors       []Color
 	defaultColor Color
@@ -28,7 +27,6 @@ type Palette struct {
 
 // NewPalette creates a new Palette with the given colors.
 // If colors is nil or empty, uses tab10 palette by default.
-//
 func NewPalette(colors []Color) *Palette {
 	if len(colors) == 0 {
 		colors = imaging.Tab10
@@ -42,7 +40,6 @@ func NewPalette(colors []Color) *Palette {
 
 // ChooseColor selects a color based on a hashable value (typically object ID).
 // Uses FNV-1a hash for deterministic color assignment.
-//
 func (p *Palette) ChooseColor(hashable interface{}) Color {
 	if hashable == nil {
 		return p.defaultColor
@@ -60,7 +57,6 @@ func (p *Palette) ChooseColor(hashable interface{}) Color {
 
 // Set changes the palette to a named palette.
 // Supported names: "tab10", "tab20", "colorblind".
-//
 func (p *Palette) Set(paletteName string) error {
 	switch strings.ToLower(paletteName) {
 	case "tab10":

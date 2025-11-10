@@ -12,7 +12,6 @@ import (
 // FixedCamera stabilizes video based on camera motion by drawing frames on a larger canvas.
 // As the camera moves, the frame moves in the opposite direction, stabilizing objects.
 //
-//
 // WARNING: This only works with TranslationTransformation. Using HomographyTransformation
 // will result in unexpected behavior.
 //
@@ -32,7 +31,6 @@ type FixedCamera struct {
 // Parameters:
 //   - scale: Resulting video resolution will be scale * (H, W). Use larger scale if camera moves significantly (default 2.0)
 //   - attenuation: Controls how fast older frames fade to black (default 0.05)
-//
 func NewFixedCamera(scale, attenuation float64) *FixedCamera {
 	// Set defaults if not provided
 	if scale <= 0 {
@@ -56,7 +54,6 @@ func NewFixedCamera(scale, attenuation float64) *FixedCamera {
 //   - coordTransform: Coordinate transformation from MotionEstimator
 //
 // Returns: New Mat with stabilized view (larger canvas)
-//
 func (fc *FixedCamera) AdjustFrame(frame *gocv.Mat, coordTransform norfairgo.CoordinateTransformation) gocv.Mat {
 	frameHeight := frame.Rows()
 	frameWidth := frame.Cols()
@@ -64,7 +61,7 @@ func (fc *FixedCamera) AdjustFrame(frame *gocv.Mat, coordTransform norfairgo.Coo
 	// Initialize background if necessary (lazy init)
 	if fc.background == nil {
 		// Calculate scaled size
-		scaledWidth := int(float64(frameWidth)*fc.scale + 0.5)  // Round
+		scaledWidth := int(float64(frameWidth)*fc.scale + 0.5)   // Round
 		scaledHeight := int(float64(frameHeight)*fc.scale + 0.5) // Round
 
 		// Create zero-filled background
@@ -110,7 +107,7 @@ func (fc *FixedCamera) AdjustFrame(frame *gocv.Mat, coordTransform norfairgo.Coo
 	// Check if scale is sufficient to cover movement
 	// If not, crop the frame to avoid errors
 	if backgroundY0 < 0 || backgroundX0 < 0 ||
-	   backgroundY1 > backgroundHeight || backgroundX1 > backgroundWidth {
+		backgroundY1 > backgroundHeight || backgroundX1 > backgroundWidth {
 		norfairgo.WarnOnce("moving_camera_scale is not enough to cover the range of camera movement, frame will be cropped")
 
 		// Crop left or top of frame if necessary

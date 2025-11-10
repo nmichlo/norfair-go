@@ -322,7 +322,7 @@ func TestComputeGrid_PolarCoordinates(t *testing.T) {
 
 		// Points should be within reasonable distance from center
 		if x >= -maxDim && x <= float64(w)+maxDim &&
-		   y >= -maxDim && y <= float64(h)+maxDim {
+			y >= -maxDim && y <= float64(h)+maxDim {
 			pointsInRange++
 		}
 	}

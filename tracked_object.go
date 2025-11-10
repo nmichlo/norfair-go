@@ -22,11 +22,11 @@ type TrackedObject struct {
 	InitialPeriod int // Initial period value (stored for Merge())
 
 	// State counters
-	HitCounter     int   // Current hit counter (object-level)
-	ReidHitCounter *int  // Current ReID counter (nil until object dies)
+	HitCounter      int   // Current hit counter (object-level)
+	ReidHitCounter  *int  // Current ReID counter (nil until object dies)
 	PointHitCounter []int // Per-point hit counters
-	Age            int   // Age in frames
-	IsInitializing bool  // Whether still in initialization phase
+	Age             int   // Age in frames
+	IsInitializing  bool  // Whether still in initialization phase
 
 	// IDs
 	InitializingID *int // Temporary ID during initialization
@@ -46,12 +46,11 @@ type TrackedObject struct {
 	Estimate *mat.Dense // Cached position estimate (updated after filter operations)
 
 	// Label and coordinate transform
-	Label    *string                       // Class label
+	Label    *string                     // Class label
 	AbsToRel func(*mat.Dense) *mat.Dense // Absolute to relative coordinate transform
 }
 
 // NewTrackedObject creates a new tracked object from an initial detection.
-//
 //
 // Parameters:
 //   - objFactory: Factory for ID generation
@@ -161,7 +160,6 @@ func NewTrackedObject(
 
 // TrackerStep is called once per frame for all tracked objects.
 // It decrements counters, increments age, and calls filter prediction.
-//
 func (to *TrackedObject) TrackerStep() {
 	// ReID counter management
 	if to.ReidHitCounter == nil {
@@ -193,7 +191,6 @@ func (to *TrackedObject) TrackerStep() {
 
 // Hit is called when the object is matched with a detection.
 // It updates the Kalman filter and manages hit counters.
-//
 func (to *TrackedObject) Hit(detection *Detection, period int) error {
 	// Add to past detections
 	to.conditionallyAddToPastDetections(detection)
@@ -342,7 +339,6 @@ func (to *TrackedObject) Hit(detection *Detection, period int) error {
 
 // Merge merges another tracked object into this one (ReID matching).
 // This keeps the old object's ID but takes the new object's state.
-//
 func (to *TrackedObject) Merge(trackedObject *TrackedObject) {
 	// Reset ReID counter (back to life!)
 	to.ReidHitCounter = nil
@@ -377,7 +373,6 @@ func (to *TrackedObject) Merge(trackedObject *TrackedObject) {
 //
 // Parameters:
 //   - absolute: If true, returns absolute coordinates; if false, returns relative
-//
 func (to *TrackedObject) GetEstimate(absolute bool) (*mat.Dense, error) {
 	// Extract position from filter state (first dimZ elements)
 	stateVector := to.Filter.GetStateVector()
@@ -410,7 +405,6 @@ func (to *TrackedObject) GetEstimate(absolute bool) (*mat.Dense, error) {
 }
 
 // EstimateVelocity returns the velocity estimate from the Kalman filter.
-//
 func (to *TrackedObject) EstimateVelocity() *mat.Dense {
 	stateVector := to.Filter.GetStateVector()
 	velocities := mat.NewDense(to.NumPoints, to.DimPoints, nil)
@@ -426,7 +420,6 @@ func (to *TrackedObject) EstimateVelocity() *mat.Dense {
 }
 
 // LivePoints returns a boolean mask of which points are currently live.
-//
 func (to *TrackedObject) LivePoints() []bool {
 	livePoints := make([]bool, to.NumPoints)
 	for i := 0; i < to.NumPoints; i++ {
@@ -454,19 +447,16 @@ func (to *TrackedObject) GetLabel() *string {
 }
 
 // HitCounterIsPositive returns whether the object is alive.
-//
 func (to *TrackedObject) HitCounterIsPositive() bool {
 	return to.HitCounter >= 0
 }
 
 // ReidHitCounterIsPositive returns whether the object can still be ReID'd.
-//
 func (to *TrackedObject) ReidHitCounterIsPositive() bool {
 	return to.ReidHitCounter == nil || *to.ReidHitCounter >= 0
 }
 
 // UpdateCoordinateTransformation updates the coordinate transformation function.
-//
 func (to *TrackedObject) UpdateCoordinateTransformation(coordTransform CoordinateTransformation) {
 	if coordTransform != nil {
 		to.AbsToRel = coordTransform.AbsToRel
@@ -485,7 +475,6 @@ func (to *TrackedObject) UpdateCoordinateTransformation(coordTransform Coordinat
 
 // acquireIDs gets permanent IDs from the factory.
 // Called when object transitions from initializing to initialized.
-//
 func (to *TrackedObject) acquireIDs() {
 	id, globalID := to.objFactory.GetIDs()
 	to.ID = &id
@@ -494,7 +483,6 @@ func (to *TrackedObject) acquireIDs() {
 
 // conditionallyAddToPastDetections manages the past detections storage.
 // Maintains a uniform distribution of past detections across the object's lifetime.
-//
 func (to *TrackedObject) conditionallyAddToPastDetections(detection *Detection) {
 	if to.config.PastDetectionsLength == 0 {
 		return

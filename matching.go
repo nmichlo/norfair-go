@@ -54,8 +54,8 @@ func MatchDetectionsAndObjects(
 	for currentMin < distanceThreshold {
 		// Find the position of the minimum value
 		flatIdx := argMin(matrixCopy)
-		detIdx := flatIdx / cols  // Row index
-		objIdx := flatIdx % cols   // Column index
+		detIdx := flatIdx / cols // Row index
+		objIdx := flatIdx % cols // Column index
 
 		// Record the match
 		candIndices = append(candIndices, detIdx)

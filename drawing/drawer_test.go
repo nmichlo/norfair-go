@@ -328,8 +328,8 @@ func TestDrawer_AlphaBlend_HalfAlpha(t *testing.T) {
 	defer frame2.Close()
 
 	// Fill with different colors
-	frame1.SetTo(gocv.NewScalar(255, 0, 0, 0))   // Blue
-	frame2.SetTo(gocv.NewScalar(0, 255, 0, 0))   // Green
+	frame1.SetTo(gocv.NewScalar(255, 0, 0, 0)) // Blue
+	frame2.SetTo(gocv.NewScalar(0, 255, 0, 0)) // Green
 
 	// Blend 50/50
 	result := drawer.AlphaBlend(&frame1, &frame2, 0.5, 0.5, 0)

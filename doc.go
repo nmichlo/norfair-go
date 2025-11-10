@@ -46,6 +46,5 @@ Custom: Implement Distance interface
   - OptimizedKalmanFilter: Fast, simplified covariance (default)
   - FilterPyKalmanFilter: Full Kalman, filterpy-compatible
   - NoFilter: No prediction
-
 */
 package norfairgo

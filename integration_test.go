@@ -170,7 +170,7 @@ func TestIntegration_MultipleDistanceFunctions(t *testing.T) {
 				x := 100.0 + float64(frame)*10.0
 				det, _ := norfairgo.NewDetection(
 					mat.NewDense(2, 2, []float64{
-						x, 100.0,     // top-left
+						x, 100.0, // top-left
 						x + 50, 150.0, // bottom-right
 					}),
 					nil,
@@ -191,7 +191,7 @@ func TestIntegration_MultipleDistanceFunctions(t *testing.T) {
 			},
 		},
 		{
-			name:     "CustomScalar_Manhattan",
+			name: "CustomScalar_Manhattan",
 			distance: norfairgo.NewScalarDistance(func(det *norfairgo.Detection, obj *norfairgo.TrackedObject) float64 {
 				// Manhattan distance
 				sum := 0.0
@@ -476,16 +476,16 @@ func TestIntegration_EndToEndWorkflow(t *testing.T) {
 				&frame,
 				drawables,
 				&radius,
-				nil,        // thickness (default)
-				"by_id",    // color
-				false,      // drawLabels
-				nil,        // textSize (default)
-				true,       // drawIDs
-				true,       // drawPoints
-				nil,        // textThickness (default)
-				nil,        // textColor (default)
-				false,      // hideDeadPoints
-				false,      // drawScores
+				nil,     // thickness (default)
+				"by_id", // color
+				false,   // drawLabels
+				nil,     // textSize (default)
+				true,    // drawIDs
+				true,    // drawPoints
+				nil,     // textThickness (default)
+				nil,     // textColor (default)
+				false,   // hideDeadPoints
+				false,   // drawScores
 			)
 
 			// Verify frame dimensions unchanged

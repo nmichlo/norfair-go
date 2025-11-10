@@ -31,7 +31,6 @@ var (
 //
 // Points are chosen on a semi-sphere of radius 1 centered around (0, 0).
 // Results are cached since the grid in absolute coordinates doesn't change.
-//
 func getGrid(size, w, h int, polar bool) *mat.Dense {
 	key := gridCacheKey{size: size, w: w, h: h, polar: polar}
 
@@ -68,10 +67,11 @@ func getGrid(size, w, h int, polar bool) *mat.Dense {
 // computeGrid generates the spherical grid projection.
 //
 // Python implementation:
-//   step = np.pi / size
-//   start = -np.pi / 2 + step / 2
-//   end = np.pi / 2
-//   theta, fi = np.mgrid[start:end:step, start:end:step]
+//
+//	step = np.pi / size
+//	start = -np.pi / 2 + step / 2
+//	end = np.pi / 2
+//	theta, fi = np.mgrid[start:end:step, start:end:step]
 //
 // Then projects onto plane using either polar or equator mode.
 func computeGrid(size, w, h int, polar bool) *mat.Dense {
@@ -142,7 +142,6 @@ func computeGrid(size, w, h int, polar bool) *mat.Dense {
 //   - thickness: Thickness of each point (default 1)
 //   - color: Color of the points (default black)
 //   - polar: If true, points drawn as if viewing pole; if false, viewing equator (default false)
-//
 func DrawAbsoluteGrid(
 	frame *gocv.Mat,
 	coordTransform norfairgo.CoordinateTransformation,

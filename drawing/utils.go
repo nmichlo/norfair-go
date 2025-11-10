@@ -9,7 +9,6 @@ import (
 
 // Centroid calculates the centroid (geometric center) of a set of 2D points.
 // Returns the (x, y) coordinates as integers.
-//
 func Centroid(points *mat.Dense) (int, int) {
 	rows, _ := points.Dims()
 
@@ -34,7 +33,6 @@ func Centroid(points *mat.Dense) (int, int) {
 //   - drawLabels: Whether to include the label
 //   - drawIDs: Whether to include the ID
 //   - drawScores: Whether to include the scores (as mean)
-//
 func BuildText(drawable *Drawable, drawLabels, drawIDs, drawScores bool) string {
 	text := ""
 

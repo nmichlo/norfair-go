@@ -99,13 +99,12 @@ func TestMatching_PerfectMatches(t *testing.T) {
 //	    cand_indices, obj_indices = greedy_match(distance_matrix, threshold)
 //	    # Greedy order: [2,2]=0.3, [0,0]=0.5, [1,1]=0.8
 //	    assert cand_indices == [2, 0, 1]
-//
 func TestMatching_ThresholdFiltering(t *testing.T) {
 	// Some distances above threshold, some below
 	distanceMatrix := mat.NewDense(3, 3, []float64{
-		0.5, 2.0, 3.0,  // Only [0,0]=0.5 is below threshold
-		2.5, 0.8, 2.0,  // Only [1,1]=0.8 is below threshold
-		3.0, 3.0, 0.3,  // Only [2,2]=0.3 is below threshold
+		0.5, 2.0, 3.0, // Only [0,0]=0.5 is below threshold
+		2.5, 0.8, 2.0, // Only [1,1]=0.8 is below threshold
+		3.0, 3.0, 0.3, // Only [2,2]=0.3 is below threshold
 	})
 
 	threshold := 1.5
@@ -132,7 +131,6 @@ func TestMatching_ThresholdFiltering(t *testing.T) {
 //	    threshold = 3.0
 //	    cand_indices, obj_indices = greedy_match(distance_matrix, threshold)
 //	    assert len(cand_indices) == 0
-//
 func TestMatching_AllAboveThreshold(t *testing.T) {
 	// All distances above threshold - no matches
 	distanceMatrix := mat.NewDense(2, 2, []float64{
@@ -165,7 +163,6 @@ func TestMatching_AllAboveThreshold(t *testing.T) {
 //	    threshold = 3.0
 //	    cand_indices, obj_indices = greedy_match(distance_matrix, threshold)
 //	    assert cand_indices == []
-//
 func TestMatching_SingleElementNoMatch(t *testing.T) {
 	// 1x1 matrix with distance above threshold - no match
 	distanceMatrix := mat.NewDense(1, 1, []float64{5.0})
@@ -189,7 +186,6 @@ func TestMatching_SingleElementNoMatch(t *testing.T) {
 //	    threshold = 1.0
 //	    cand_indices, obj_indices = greedy_match(distance_matrix, threshold)
 //	    assert cand_indices == [0]
-//
 func TestMatching_SingleElementMatch(t *testing.T) {
 	// 1x1 matrix with distance below threshold - should match
 	distanceMatrix := mat.NewDense(1, 1, []float64{0.5})
@@ -258,14 +254,13 @@ func TestMatching_GreedyBehavior(t *testing.T) {
 //	    # Greedy picks: [0,0]=0.5, then [2,1]=2.0
 //	    assert cand_indices == [0, 2]
 //	    assert obj_indices == [0, 1]
-//
 func TestMatching_OneToOneConstraint(t *testing.T) {
 	// Multiple candidates close to same object
 	// Only one should match
 	distanceMatrix := mat.NewDense(3, 2, []float64{
-		0.5, 3.0,  // Cand 0 closest to Obj 0
-		0.6, 3.5,  // Cand 1 also close to Obj 0
-		0.7, 2.0,  // Cand 2 closest to Obj 1
+		0.5, 3.0, // Cand 0 closest to Obj 0
+		0.6, 3.5, // Cand 1 also close to Obj 0
+		0.7, 2.0, // Cand 2 closest to Obj 1
 	})
 
 	threshold := 4.0
@@ -302,7 +297,6 @@ func TestMatching_OneToOneConstraint(t *testing.T) {
 //	    cand_indices, obj_indices = greedy_match(distance_matrix, threshold)
 //	    # Greedy order: [2,2]=0.3, [1,1]=0.4, [0,0]=0.5
 //	    assert cand_indices == [2, 1, 0]
-//
 func TestMatching_MoreDetectionsThanObjects(t *testing.T) {
 	// 5 detections, 3 objects
 	distanceMatrix := mat.NewDense(5, 3, []float64{
@@ -342,7 +336,6 @@ func TestMatching_MoreDetectionsThanObjects(t *testing.T) {
 //	    cand_indices, obj_indices = greedy_match(distance_matrix, threshold)
 //	    # Greedy order: [0,0]=0.5, [1,1]=0.6
 //	    assert cand_indices == [0, 1]
-//
 func TestMatching_MoreObjectsThanDetections(t *testing.T) {
 	// 2 detections, 4 objects
 	distanceMatrix := mat.NewDense(2, 4, []float64{
@@ -425,7 +418,6 @@ func TestMatching_NoNaN(t *testing.T) {
 //	    cand_indices, obj_indices = greedy_match(distance_matrix, threshold)
 //	    # Greedy order: [2,2]=0.3, [0,0]=0.5, [1,1]=0.8
 //	    assert cand_indices == [2, 0, 1]
-//
 func TestMatching_InfHandling(t *testing.T) {
 	// Matrix with Inf values (from label mismatches in distance functions)
 	distanceMatrix := mat.NewDense(3, 3, []float64{

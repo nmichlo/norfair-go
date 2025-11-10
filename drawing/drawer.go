@@ -11,7 +11,6 @@ import (
 
 // Drawer provides stateless drawing primitive functions.
 // All methods modify frames in-place and return the modified frame.
-//
 type Drawer struct{}
 
 // NewDrawer creates a new Drawer instance.
@@ -25,7 +24,6 @@ func NewDrawer() *Drawer {
 
 // Circle draws a circle on the frame.
 // Auto-scales radius and thickness based on frame dimensions if not specified.
-//
 func (d *Drawer) Circle(frame *gocv.Mat, position image.Point, radius int, thickness int, color Color) {
 	// Auto-scale radius if not specified (0 means auto)
 	if radius == 0 {
@@ -44,7 +42,6 @@ func (d *Drawer) Circle(frame *gocv.Mat, position image.Point, radius int, thick
 
 // Text draws text on the frame with optional shadow for legibility.
 // Auto-scales size and thickness based on frame dimensions if not specified.
-//
 func (d *Drawer) Text(
 	frame *gocv.Mat,
 	text string,
@@ -110,7 +107,6 @@ func (d *Drawer) Text(
 }
 
 // Rectangle draws a rectangle on the frame.
-//
 func (d *Drawer) Rectangle(frame *gocv.Mat, pt1 image.Point, pt2 image.Point, color Color, thickness int) {
 	if thickness == 0 {
 		thickness = 1
@@ -121,7 +117,6 @@ func (d *Drawer) Rectangle(frame *gocv.Mat, pt1 image.Point, pt2 image.Point, co
 }
 
 // Line draws a line segment on the frame.
-//
 func (d *Drawer) Line(frame *gocv.Mat, start image.Point, end image.Point, color Color, thickness int) {
 	if thickness == 0 {
 		thickness = 1
@@ -131,7 +126,6 @@ func (d *Drawer) Line(frame *gocv.Mat, start image.Point, end image.Point, color
 }
 
 // Cross draws a cross marker (+ shape) on the frame.
-//
 func (d *Drawer) Cross(frame *gocv.Mat, center image.Point, radius int, color Color, thickness int) {
 	// Vertical line
 	start1 := image.Point{X: center.X, Y: center.Y - radius}
@@ -147,7 +141,6 @@ func (d *Drawer) Cross(frame *gocv.Mat, center image.Point, radius int, color Co
 // AlphaBlend performs weighted blending of two frames.
 // output = alpha*frame1 + beta*frame2 + gamma
 // If beta is < 0, it defaults to 1-alpha.
-//
 func (d *Drawer) AlphaBlend(frame1 *gocv.Mat, frame2 *gocv.Mat, alpha float64, beta float64, gamma float64) gocv.Mat {
 	// Auto-calculate beta if not specified
 	if beta < 0 {
@@ -165,7 +158,6 @@ func (d *Drawer) AlphaBlend(frame1 *gocv.Mat, frame2 *gocv.Mat, alpha float64, b
 
 // Drawable provides a unified interface for drawing Detections and TrackedObjects.
 // Extracts relevant fields for rendering regardless of source type.
-//
 type Drawable struct {
 	Points     *mat.Dense
 	ID         *int

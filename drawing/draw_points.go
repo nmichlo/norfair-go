@@ -12,7 +12,6 @@ import (
 )
 
 // DrawPoints draws the points included in a list of Detections or TrackedObjects.
-//
 func DrawPoints(
 	frame *gocv.Mat,
 	drawables []interface{}, // []Detection or []TrackedObject
@@ -141,9 +140,9 @@ func DrawPoints(
 					finalTextSize,
 					objTextColor,
 					finalTextThickness,
-					true,        // shadow
+					true,           // shadow
 					colorpkg.Black, // shadowColor
-					2,           // shadowOffset
+					2,              // shadowOffset
 				)
 			}
 		}

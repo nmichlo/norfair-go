@@ -8,14 +8,13 @@ import (
 	"strings"
 	"time"
 
-	"gocv.io/x/gocv"
 	"github.com/schollz/progressbar/v3"
+	"gocv.io/x/gocv"
 	"gopkg.in/ini.v1"
 )
 
 // Video wraps OpenCV VideoCapture and VideoWriter with progress tracking.
 // Supports reading from video files or camera devices.
-//
 type Video struct {
 	// Input (exactly one must be set)
 	camera    *int
@@ -63,7 +62,6 @@ type VideoOptions struct {
 
 // NewVideo creates a new Video instance.
 // Exactly one of opts.Camera or opts.InputPath must be set.
-//
 func NewVideo(opts VideoOptions) (*Video, error) {
 	// Validate input: exactly one of camera or inputPath must be set
 	if (opts.Camera == nil && opts.InputPath == nil) || (opts.Camera != nil && opts.InputPath != nil) {
@@ -128,7 +126,6 @@ func NewVideo(opts VideoOptions) (*Video, error) {
 
 // Frames returns a channel that yields video frames.
 // The channel is closed when all frames have been read or an error occurs.
-//
 func (v *Video) Frames() <-chan gocv.Mat {
 	frames := make(chan gocv.Mat)
 
@@ -166,7 +163,6 @@ func (v *Video) Frames() <-chan gocv.Mat {
 
 // Write writes a frame to the output video.
 // VideoWriter is lazily initialized on first call.
-//
 func (v *Video) Write(frame gocv.Mat) error {
 	// Lazy initialization of VideoWriter
 	if v.videoWriter == nil {
@@ -197,7 +193,6 @@ func (v *Video) Write(frame gocv.Mat) error {
 
 // Show displays a frame in a window.
 // Optional downsampling for slow network connections (X11 forwarding).
-//
 func (v *Video) Show(frame gocv.Mat, downsampleRatio float64) int {
 	// Create window if not exists
 	if v.window == nil {
@@ -221,7 +216,6 @@ func (v *Video) Show(frame gocv.Mat, downsampleRatio float64) int {
 
 // GetOutputFilePath returns the output file path.
 // If outputPath is a directory, generates a filename based on input.
-//
 func (v *Video) GetOutputFilePath() string {
 	// Check if outputPath is a directory
 	info, err := os.Stat(v.outputPath)
@@ -245,7 +239,6 @@ func (v *Video) GetOutputFilePath() string {
 
 // getCodecFourcc returns the codec fourcc for the given filename.
 // Auto-detects based on extension if not explicitly set.
-//
 func (v *Video) getCodecFourcc(filename string) string {
 	// Use user-provided fourcc if set
 	if v.outputFourcc != nil {
@@ -341,7 +334,6 @@ func (v *Video) cleanup() {
 
 // Close releases all resources.
 // Should be called with defer after creating a Video.
-//
 func (v *Video) Close() error {
 	v.cleanup()
 	return nil
@@ -349,7 +341,6 @@ func (v *Video) Close() error {
 
 // VideoFromFrames reads image sequences from MOTChallenge-style directories.
 // Expects a seqinfo.ini file with metadata and numbered image files.
-//
 type VideoFromFrames struct {
 	inputPath  string
 	outputPath string
@@ -371,7 +362,6 @@ type VideoFromFrames struct {
 
 // NewVideoFromFrames creates a new VideoFromFrames instance.
 // Reads metadata from seqinfo.ini in the input directory.
-//
 func NewVideoFromFrames(inputPath, savePath string, makeVideo bool) (*VideoFromFrames, error) {
 	vff := &VideoFromFrames{
 		inputPath:   inputPath,
@@ -434,7 +424,6 @@ func NewVideoFromFrames(inputPath, savePath string, makeVideo bool) (*VideoFromF
 }
 
 // Frames returns a channel that yields frames from the image sequence.
-//
 func (vff *VideoFromFrames) Frames() <-chan gocv.Mat {
 	frames := make(chan gocv.Mat)
 
@@ -461,7 +450,6 @@ func (vff *VideoFromFrames) Frames() <-chan gocv.Mat {
 }
 
 // Update writes a frame to the video if makeVideo is true.
-//
 func (vff *VideoFromFrames) Update(frame gocv.Mat) error {
 	if vff.videoWriter != nil {
 		if err := vff.videoWriter.Write(frame); err != nil {
@@ -480,7 +468,6 @@ func (vff *VideoFromFrames) Update(frame gocv.Mat) error {
 }
 
 // Close releases all resources.
-//
 func (vff *VideoFromFrames) Close() error {
 	if vff.videoWriter != nil {
 		vff.videoWriter.Close()

@@ -97,9 +97,9 @@ func TestParseColorName_ValidNames(t *testing.T) {
 		{"blue", color.Blue},
 		{"white", color.White},
 		{"black", color.Black},
-		{"Red", color.Red},       // Case insensitive
-		{"GREEN", color.Green},   // Case insensitive
-		{"BlUe", color.Blue},     // Mixed case
+		{"Red", color.Red},     // Case insensitive
+		{"GREEN", color.Green}, // Case insensitive
+		{"BlUe", color.Blue},   // Mixed case
 		{"hotpink", color.HotPink},
 		{"cornflowerblue", color.CornflowerBlue},
 	}
@@ -251,7 +251,7 @@ func TestPalette_SetDefaultColor(t *testing.T) {
 
 func TestColor_ToRGBA(t *testing.T) {
 	tests := []struct {
-		color    Color
+		color     Color
 		expectedR uint8
 		expectedG uint8
 		expectedB uint8

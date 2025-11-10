@@ -481,8 +481,8 @@ func TestDrawBoxes_BoundaryBox(t *testing.T) {
 
 	// Box at frame boundaries
 	points := mat.NewDense(2, 2, []float64{
-		0, 0,         // top-left corner
-		639, 479,     // bottom-right corner
+		0, 0, // top-left corner
+		639, 479, // bottom-right corner
 	})
 	drawable, _ := NewDrawable(points, nil, nil, nil, nil)
 
@@ -517,7 +517,6 @@ func TestDrawBoxes_BoundaryBox(t *testing.T) {
 //	    obj2 = Drawable(points=np.array([[350, 250], [550, 400]], dtype=np.float64), live_points=np.array([True, True]))
 //	    draw_boxes(frame, drawables=[obj2], color="blue", draw_labels=False, draw_ids=False)
 //	    cv2.imwrite("python_test4_direct_color.png", frame)
-//
 func TestDrawBoxes_DirectColor_GoldenImage(t *testing.T) {
 	frame := gocv.NewMatWithSize(480, 640, gocv.MatTypeCV8UC3)
 	defer frame.Close()

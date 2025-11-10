@@ -14,7 +14,6 @@ import (
 
 // ValidatePoints ensures points have shape (n_points, n_dims) where n_dims is 2 or 3.
 // If points is a 1D array (single point), it reshapes to (1, n_dims).
-//
 func ValidatePoints(points *mat.Dense) (*mat.Dense, error) {
 	rows, cols := points.Dims()
 
@@ -39,7 +38,6 @@ func ValidatePoints(points *mat.Dense) (*mat.Dense, error) {
 
 // GetTerminalSize returns the terminal dimensions (columns, lines).
 // If terminal size cannot be detected, returns the provided defaults.
-//
 func GetTerminalSize(defaultCols, defaultLines int) (cols, lines int) {
 	// Try to get terminal size from various file descriptors
 	// Try stdin (fd 0)
@@ -63,7 +61,6 @@ func GetTerminalSize(defaultCols, defaultLines int) (cols, lines int) {
 
 // GetCutout extracts a rectangular region from an image based on the bounding box of points.
 // The cutout is defined by the minimum and maximum x and y coordinates in the points array.
-//
 func GetCutout(points *mat.Dense, img gocv.Mat) gocv.Mat {
 	rows, cols := points.Dims()
 	if rows == 0 || cols < 2 {
@@ -135,7 +132,6 @@ var warnedMessages sync.Map
 
 // WarnOnce prints a warning message only once (thread-safe).
 // Subsequent calls with the same message are ignored.
-//
 func WarnOnce(message string) {
 	if _, loaded := warnedMessages.LoadOrStore(message, true); !loaded {
 		log.Printf("WARNING: %s", message)
@@ -144,7 +140,6 @@ func WarnOnce(message string) {
 
 // AnyTrue returns true if any element in the slice is true.
 // Returns false for empty slices.
-//
 func AnyTrue(values []bool) bool {
 	for _, v := range values {
 		if v {

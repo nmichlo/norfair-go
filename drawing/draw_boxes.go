@@ -8,7 +8,6 @@ import (
 )
 
 // DrawBoxes draws bounding boxes for Detections or TrackedObjects.
-//
 func DrawBoxes(
 	frame *gocv.Mat,
 	drawables []interface{},

@@ -125,7 +125,6 @@ func (inf *InformationFile) SearchString(variableName string) (string, error) {
 //
 // The output format is CSV with columns:
 // frame,id,bb_left,bb_top,bb_width,bb_height,-1,-1,-1,-1
-//
 type PredictionsTextFile struct {
 	length      int
 	textFile    *os.File
@@ -140,7 +139,6 @@ type PredictionsTextFile struct {
 //   - informationFile: Optional InformationFile (if nil, will load from inputPath/seqinfo.ini)
 //
 // Returns: PredictionsTextFile instance or error
-//
 func NewPredictionsTextFile(inputPath string, savePath string, informationFile *InformationFile) (*PredictionsTextFile, error) {
 	if savePath == "" {
 		savePath = "."
@@ -192,7 +190,6 @@ func NewPredictionsTextFile(inputPath string, savePath string, informationFile *
 //   - frameNumber: Optional frame number (if nil, uses auto-incremented counter)
 //
 // Format: frame_number,id,bb_left,bb_top,bb_width,bb_height,-1,-1,-1,-1
-//
 func (ptf *PredictionsTextFile) Update(predictions []*TrackedObject, frameNumber *int) error {
 	// Use provided frame number or auto-increment
 	frame := ptf.frameNumber
@@ -258,11 +255,10 @@ func (ptf *PredictionsTextFile) Close() error {
 //
 // This converts to corner format:
 // frame,id,x_min,y_min,x_max,y_max,conf,x,y,z
-//
 type DetectionFileParser struct {
 	frameNumber      int
-	matrixDetections [][]float64 // All detections (N x 10 matrix)
-	length           int          // Sequence length
+	matrixDetections [][]float64    // All detections (N x 10 matrix)
+	length           int            // Sequence length
 	sortedByFrame    [][]*Detection // Pre-indexed detections by frame
 }
 
@@ -273,7 +269,6 @@ type DetectionFileParser struct {
 //   - informationFile: Optional InformationFile (if nil, will load from inputPath/seqinfo.ini)
 //
 // Returns: DetectionFileParser instance or error
-//
 func NewDetectionFileParser(inputPath string, informationFile *InformationFile) (*DetectionFileParser, error) {
 	// Load detections CSV file
 	detectionsPath := filepath.Join(inputPath, "det/det.txt")
@@ -351,7 +346,6 @@ func NewDetectionFileParser(inputPath string, informationFile *InformationFile) 
 }
 
 // getDetectionsFromFrame returns a list of Detection objects for the given frame.
-//
 func (dfp *DetectionFileParser) getDetectionsFromFrame(frameNumber int) []*Detection {
 	var detections []*Detection
 
@@ -385,7 +379,6 @@ func (dfp *DetectionFileParser) getDetectionsFromFrame(frameNumber int) []*Detec
 // Detections returns a channel that iterates through detections frame by frame.
 //
 // This implements the iterator protocol using Go channels (matches video.go pattern).
-//
 func (dfp *DetectionFileParser) Detections() <-chan []*Detection {
 	ch := make(chan []*Detection)
 	go func() {
@@ -584,7 +577,6 @@ func (df *MetricsDataFrame) Get(videoName, metricName string) (float64, bool) {
 // Accumulators manages multiple MOTAccumulator instances for multi-video evaluation.
 //
 // This is thread-safe for concurrent accumulation across different videos.
-//
 type Accumulators struct {
 	accumulators map[string]*motmetrics.MOTAccumulator // map[videoName]*accumulator
 	mu           sync.Mutex                            // Thread-safety for concurrent updates
@@ -593,7 +585,6 @@ type Accumulators struct {
 // NewAccumulators creates a new multi-video accumulator manager.
 //
 // Returns: Initialized Accumulators instance
-//
 func NewAccumulators() *Accumulators {
 	return &Accumulators{
 		accumulators: make(map[string]*motmetrics.MOTAccumulator),
@@ -606,7 +597,6 @@ func NewAccumulators() *Accumulators {
 //   - videoName: Name of the video sequence
 //
 // Returns: Error if accumulator already exists for this video
-//
 func (a *Accumulators) CreateAccumulator(videoName string) error {
 	a.mu.Lock()
 	defer a.mu.Unlock()
@@ -630,7 +620,6 @@ func (a *Accumulators) CreateAccumulator(videoName string) error {
 //   - threshold: IoU distance threshold (default 0.5)
 //
 // Returns: Error if accumulator doesn't exist
-//
 func (a *Accumulators) Update(gtBBoxes [][]float64, gtIDs []int, predBBoxes [][]float64, predIDs []int, videoName string, threshold float64) error {
 	a.mu.Lock()
 	defer a.mu.Unlock()
@@ -682,7 +671,6 @@ type Metrics struct {
 // Edge cases:
 //   - MOTA when numObjects == 0 → return 0.0 (not NaN)
 //   - MOTP when numMatches == 0 → return NaN
-//
 func (a *Accumulators) ComputeMetrics() (*Metrics, error) {
 	a.mu.Lock()
 	defer a.mu.Unlock()
@@ -785,7 +773,6 @@ func (a *Accumulators) ComputeMetrics() (*Metrics, error) {
 // PrintMetrics prints a formatted summary of computed metrics.
 //
 // Returns: Error if metric computation fails
-//
 func (a *Accumulators) PrintMetrics() error {
 	metrics, err := a.ComputeMetrics()
 	if err != nil {
@@ -818,7 +805,6 @@ func (a *Accumulators) PrintMetrics() error {
 //   - filePath: Path to output CSV file
 //
 // Returns: Error if file creation or metric computation fails
-//
 func (a *Accumulators) SaveMetrics(filePath string) error {
 	metrics, err := a.ComputeMetrics()
 	if err != nil {
@@ -851,7 +837,6 @@ func (a *Accumulators) SaveMetrics(filePath string) error {
 }
 
 // Reset clears all accumulators.
-//
 func (a *Accumulators) Reset() {
 	a.mu.Lock()
 	defer a.mu.Unlock()
@@ -886,7 +871,6 @@ type MOTChallengeFrame struct {
 // Returns: MOTChallengeData with frames organized by frame number
 //
 // CSV Format: frame,id,bb_left,bb_top,bb_width,bb_height,conf,x,y,z
-//
 func LoadMotchallenge(csvPath string) (*MOTChallengeData, error) {
 	file, err := os.Open(csvPath)
 	if err != nil {
@@ -960,7 +944,6 @@ func LoadMotchallenge(csvPath string) (*MOTChallengeData, error) {
 //   - threshold: Distance threshold for valid matches (default 0.5 for IoU)
 //
 // Returns: Populated Accumulators with all frames processed
-//
 func CompareDataframes(gt, predictions *MOTChallengeData, distanceFunc string, threshold float64) (*Accumulators, error) {
 	// Only IoU distance supported for now (Phase 3)
 	if distanceFunc != "iou" && distanceFunc != "" {

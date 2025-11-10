@@ -236,7 +236,6 @@ func TestTracker_UpdateEmptyDetections(t *testing.T) {
 //	    points=np.array([[x1, y1], [x2, y2]]),
 //	    scores=np.array([0.9, 0.8])
 //	)
-//
 func TestDetection_Creation(t *testing.T) {
 	// Test valid 2D points
 	points2D := mat.NewDense(3, 2, []float64{
@@ -292,7 +291,6 @@ func TestDetection_Creation(t *testing.T) {
 //	# - estimate: current state estimate from Kalman filter
 //	# - last_detection: most recent matched detection
 //	# - past_detections: history of detections
-//
 func TestTrackedObject_Creation(t *testing.T) {
 	// Create detection
 	points := mat.NewDense(2, 2, []float64{
@@ -408,7 +406,6 @@ func (m *mockCoordinateTransformation) AbsToRel(points *mat.Dense) *mat.Dense {
 //	    coord_transformations=coord_transform
 //	)
 //	# Tracked object positions are compensated for camera movement
-//
 func TestTracker_CameraMotion(t *testing.T) {
 	// Test camera motion with both 1D [1,1] and 2D [[1,1]] point formats
 	testCases := []struct {

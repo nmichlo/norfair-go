@@ -73,28 +73,28 @@ func TestPaths_LazyInit(t *testing.T) {
 // TestPaths_AutoScaling verifies radius and thickness are auto-calculated
 func TestPaths_AutoScaling(t *testing.T) {
 	tests := []struct {
-		name            string
-		height          int
-		expectedRadius  int
-		expectedThick   int
+		name           string
+		height         int
+		expectedRadius int
+		expectedThick  int
 	}{
 		{
 			name:           "480p",
 			height:         480,
-			expectedRadius: 3,  // max(480/100 * 0.7, 1) = max(3.36, 1) = 3
-			expectedThick:  1,  // max(480/100 / 7, 1) = max(0.685, 1) = 1
+			expectedRadius: 3, // max(480/100 * 0.7, 1) = max(3.36, 1) = 3
+			expectedThick:  1, // max(480/100 / 7, 1) = max(0.685, 1) = 1
 		},
 		{
 			name:           "1080p",
 			height:         1080,
-			expectedRadius: 7,  // max(1080/100 * 0.7, 1) = max(7.56, 1) = 7
-			expectedThick:  1,  // max(1080/100 / 7, 1) = max(1.542, 1) = 1
+			expectedRadius: 7, // max(1080/100 * 0.7, 1) = max(7.56, 1) = 7
+			expectedThick:  1, // max(1080/100 / 7, 1) = max(1.542, 1) = 1
 		},
 		{
 			name:           "Small (100x100)",
 			height:         100,
-			expectedRadius: 1,  // max(100/100 * 0.7, 1) = max(0.7, 1) = 1
-			expectedThick:  1,  // max(100/100 / 7, 1) = max(0.142, 1) = 1
+			expectedRadius: 1, // max(100/100 * 0.7, 1) = max(0.7, 1) = 1
+			expectedThick:  1, // max(100/100 / 7, 1) = max(0.142, 1) = 1
 		},
 	}
 
@@ -160,7 +160,7 @@ func TestPaths_Fade(t *testing.T) {
 // TestPaths_Accumulation verifies circles accumulate on mask
 func TestPaths_Accumulation(t *testing.T) {
 	radius := 5
-	thickness := -1 // Filled circle
+	thickness := -1                                       // Filled circle
 	paths := NewPaths(nil, &thickness, nil, &radius, 0.0) // attenuation=0 means no fade
 
 	frame := gocv.NewMatWithSize(480, 640, gocv.MatTypeCV8UC3)
@@ -531,11 +531,11 @@ func TestAbsolutePaths_EmptyObjects(t *testing.T) {
 // TestLinspace verifies the linspace helper function
 func TestLinspace(t *testing.T) {
 	tests := []struct {
-		name     string
-		start    float64
-		end      float64
-		n        int
-		expected []float64
+		name      string
+		start     float64
+		end       float64
+		n         int
+		expected  []float64
 		tolerance float64
 	}{
 		{
@@ -553,35 +553,35 @@ func TestLinspace(t *testing.T) {
 			expected: []float64{0.5},
 		},
 		{
-			name:     "Two elements",
-			start:    0.0,
-			end:      1.0,
-			n:        2,
-			expected: []float64{0.0, 1.0},
+			name:      "Two elements",
+			start:     0.0,
+			end:       1.0,
+			n:         2,
+			expected:  []float64{0.0, 1.0},
 			tolerance: 1e-10,
 		},
 		{
-			name:     "Five elements",
-			start:    0.0,
-			end:      1.0,
-			n:        5,
-			expected: []float64{0.0, 0.25, 0.5, 0.75, 1.0},
+			name:      "Five elements",
+			start:     0.0,
+			end:       1.0,
+			n:         5,
+			expected:  []float64{0.0, 0.25, 0.5, 0.75, 1.0},
 			tolerance: 1e-10,
 		},
 		{
-			name:     "Descending",
-			start:    1.0,
-			end:      0.0,
-			n:        3,
-			expected: []float64{1.0, 0.5, 0.0},
+			name:      "Descending",
+			start:     1.0,
+			end:       0.0,
+			n:         3,
+			expected:  []float64{1.0, 0.5, 0.0},
 			tolerance: 1e-10,
 		},
 		{
-			name:     "Alpha fade (99% to 1%)",
-			start:    0.99,
-			end:      0.01,
-			n:        5,
-			expected: []float64{0.99, 0.745, 0.5, 0.255, 0.01},
+			name:      "Alpha fade (99% to 1%)",
+			start:     0.99,
+			end:       0.01,
+			n:         5,
+			expected:  []float64{0.99, 0.745, 0.5, 0.255, 0.01},
 			tolerance: 1e-10,
 		},
 	}

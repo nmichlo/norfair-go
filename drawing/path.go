@@ -7,8 +7,8 @@ import (
 	"gocv.io/x/gocv"
 	"gonum.org/v1/gonum/mat"
 
-	"github.com/nmichlo/norfair-go/internal/numpy"
 	"github.com/nmichlo/norfair-go"
+	"github.com/nmichlo/norfair-go/internal/numpy"
 )
 
 // =============================================================================
@@ -49,7 +49,6 @@ func defaultGetPointsToDraw(estimate *mat.Dense) []image.Point {
 // Paths draws motion trails for tracked objects using relative coordinates.
 // It accumulates circles on a mask that fades over time, creating a trail effect.
 // This is designed for static cameras only - it will warn if used with camera motion.
-//
 type Paths struct {
 	getPointsToDraw    GetPointsToDrawFunc
 	thickness          *int
@@ -71,7 +70,6 @@ type Paths struct {
 //   - color: Circle color (nil = palette color by ID)
 //   - radius: Circle radius (nil = auto-calculate)
 //   - attenuation: Fade rate in [0, 1] where 0=never fades, 1=instant fade (default 0.01)
-//
 func NewPaths(
 	getPointsToDraw GetPointsToDrawFunc,
 	thickness *int,
@@ -105,7 +103,6 @@ func NewPaths(
 //   - trackedObjects: List of TrackedObject pointers
 //
 // Returns: New Mat with paths drawn (caller must Close() when done)
-//
 func (p *Paths) Draw(frame *gocv.Mat, trackedObjects []*norfairgo.TrackedObject) gocv.Mat {
 	// Lazy initialization of mask
 	if p.mask == nil {
@@ -182,7 +179,6 @@ func (p *Paths) Close() {
 // AbsolutePaths draws motion trails for tracked objects using absolute world coordinates.
 // It stores historical positions and transforms them to the current camera frame.
 // This supports camera motion by using coordinate transformations.
-//
 type AbsolutePaths struct {
 	getPointsToDraw GetPointsToDrawFunc
 	thickness       *int
@@ -190,7 +186,7 @@ type AbsolutePaths struct {
 	radius          *int
 	maxHistory      int
 	pastPoints      map[int][][]image.Point // Object ID -> history of absolute positions
-	alphas          []float64                // Alpha values for each history step
+	alphas          []float64               // Alpha values for each history step
 	drawer          *Drawer
 	palette         *Palette
 }
@@ -203,7 +199,6 @@ type AbsolutePaths struct {
 //   - color: Line color (nil = palette color by ID)
 //   - radius: Circle radius for current position (nil = auto-calculate)
 //   - maxHistory: Number of past positions to store per object (default 20)
-//
 func NewAbsolutePaths(
 	getPointsToDraw GetPointsToDrawFunc,
 	thickness *int,
@@ -246,7 +241,6 @@ func NewAbsolutePaths(
 //   - coordTransform: Coordinate transformation (must not be nil)
 //
 // Returns: New Mat with paths drawn (caller must Close() when done)
-//
 func (ap *AbsolutePaths) Draw(
 	frame *gocv.Mat,
 	trackedObjects []*norfairgo.TrackedObject,

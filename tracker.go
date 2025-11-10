@@ -96,7 +96,6 @@ type Tracker struct {
 //   - ReidDistanceFunction: nil (disabled)
 //   - ReidDistanceThreshold: 0.0
 //   - ReidHitCounterMax: nil (disabled)
-//
 func NewTracker(config *TrackerConfig) (*Tracker, error) {
 	if config == nil {
 		return nil, fmt.Errorf("config cannot be nil")
@@ -178,7 +177,6 @@ func NewTracker(config *TrackerConfig) (*Tracker, error) {
 //   - detections: List of detections for this frame (nil = no detections)
 //   - period: Time period since last update (default: 1)
 //   - coordTransformations: Coordinate transformation for camera motion (nil = no transformation)
-//
 func (t *Tracker) Update(
 	detections []*Detection,
 	period int,
@@ -337,7 +335,6 @@ func (t *Tracker) Update(
 //   - unmatchedCandidates: Candidates that were not matched
 //   - matchedObjects: Objects that were matched
 //   - unmatchedObjects: Objects that were not matched
-//
 func (t *Tracker) updateObjectsInPlace(
 	distanceFunction Distance,
 	distanceThreshold float64,
@@ -491,19 +488,16 @@ func (t *Tracker) updateObjectsInPlace(
 }
 
 // CurrentObjectCount returns the number of currently active objects.
-//
 func (t *Tracker) CurrentObjectCount() int {
 	return len(t.GetActiveObjects())
 }
 
 // TotalObjectCount returns the total number of objects ever created.
-//
 func (t *Tracker) TotalObjectCount() int {
 	return t.objFactory.Count()
 }
 
 // GetActiveObjects returns objects that are not initializing and have positive hit counter.
-//
 func (t *Tracker) GetActiveObjects() []*TrackedObject {
 	activeObjects := []*TrackedObject{}
 	for _, obj := range t.TrackedObjects {

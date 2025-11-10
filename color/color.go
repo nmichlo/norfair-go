@@ -24,7 +24,7 @@ var (
 	Black          = Color{B: 0, G: 0, R: 0}
 	White          = Color{B: 255, G: 255, R: 255}
 	Red            = Color{B: 0, G: 0, R: 255}
-	Green          = Color{B: 0, G: 128, R: 0}  // CSS Green (darker)
+	Green          = Color{B: 0, G: 128, R: 0} // CSS Green (darker)
 	Blue           = Color{B: 255, G: 0, R: 0}
 	Cyan           = Color{B: 255, G: 255, R: 0}
 	Magenta        = Color{B: 255, G: 0, R: 255}

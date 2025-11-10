@@ -267,9 +267,9 @@ func (h *HomographyTransformation) RelToAbs(points *mat.Dense) *mat.Dense {
 // Algorithm:
 // 1. Convert to homogeneous coordinates: [x, y] → [x, y, 1]
 // 2. Matrix multiply: [x', y', w'] = [x, y, 1] @ H^T
-// 3. Perspective division: x'' = x'/w', y'' = y'/w'
+// 3. Perspective division: x” = x'/w', y” = y'/w'
 // 4. Handle division by zero: if w' == 0, set to 0.0000001
-// 5. Return 2D points: [x'', y'']
+// 5. Return 2D points: [x”, y”]
 func (h *HomographyTransformation) transformPoints(points *mat.Dense, transformMatrix *mat.Dense) *mat.Dense {
 	rows, cols := points.Dims()
 	if cols != 2 {
@@ -346,7 +346,7 @@ type HomographyTransformationGetter struct {
 func NewHomographyTransformationGetter(ransacReprojThreshold float64, maxIters int, confidence, proportionPointsUsedThreshold float64) *HomographyTransformationGetter {
 	return &HomographyTransformationGetter{
 		Method:                        gocv.HomographyMethodRANSAC,
-		RansacReprojThreshold:        ransacReprojThreshold,
+		RansacReprojThreshold:         ransacReprojThreshold,
 		MaxIters:                      maxIters,
 		Confidence:                    confidence,
 		ProportionPointsUsedThreshold: proportionPointsUsedThreshold,
@@ -461,8 +461,8 @@ func matDenseToGocvMat(m *mat.Dense) gocv.Mat {
 	// Create a flat array of float32 data in interleaved format: [x1, y1, x2, y2, ...]
 	data := make([]float32, rows*2)
 	for i := 0; i < rows; i++ {
-		data[i*2] = float32(m.At(i, 0))     // x
-		data[i*2+1] = float32(m.At(i, 1))   // y
+		data[i*2] = float32(m.At(i, 0))   // x
+		data[i*2+1] = float32(m.At(i, 1)) // y
 	}
 
 	// Create CV_32FC2 Mat from bytes
@@ -526,15 +526,15 @@ type MotionEstimator struct {
 	TransformationsGetter TransformationGetter // Strategy for computing coordinate transformations
 
 	// Optional flow visualization
-	DrawFlow  bool        // Enable visual debugging by drawing optical flow vectors
-	FlowColor color.RGBA  // Color for flow visualization
+	DrawFlow  bool       // Enable visual debugging by drawing optical flow vectors
+	FlowColor color.RGBA // Color for flow visualization
 
 	// Internal state
-	grayPrvs                   gocv.Mat    // Reference frame (grayscale)
-	grayNext                   gocv.Mat    // Current frame (grayscale)
-	prevPts                    *mat.Dense  // Points from the previous reference frame
-	prevMask                   gocv.Mat    // Mask from the previous reference frame
-	transformationsGetterCopy  TransformationGetter // Deep copy for error recovery
+	grayPrvs                  gocv.Mat             // Reference frame (grayscale)
+	grayNext                  gocv.Mat             // Current frame (grayscale)
+	prevPts                   *mat.Dense           // Points from the previous reference frame
+	prevMask                  gocv.Mat             // Mask from the previous reference frame
+	transformationsGetterCopy TransformationGetter // Deep copy for error recovery
 }
 
 // NewMotionEstimator creates a new MotionEstimator with the specified parameters.
@@ -566,18 +566,18 @@ func NewMotionEstimator(
 	transformationsGetterCopy := transformationsGetter
 
 	return &MotionEstimator{
-		MaxPoints:                  maxPoints,
-		MinDistance:                minDistance,
-		BlockSize:                  blockSize,
-		QualityLevel:               qualityLevel,
-		TransformationsGetter:      transformationsGetter,
-		DrawFlow:                   drawFlow,
-		FlowColor:                  flowCol,
-		grayPrvs:                   gocv.NewMat(),
-		grayNext:                   gocv.NewMat(),
-		prevPts:                    nil,
-		prevMask:                   gocv.NewMat(),
-		transformationsGetterCopy:  transformationsGetterCopy,
+		MaxPoints:                 maxPoints,
+		MinDistance:               minDistance,
+		BlockSize:                 blockSize,
+		QualityLevel:              qualityLevel,
+		TransformationsGetter:     transformationsGetter,
+		DrawFlow:                  drawFlow,
+		FlowColor:                 flowCol,
+		grayPrvs:                  gocv.NewMat(),
+		grayNext:                  gocv.NewMat(),
+		prevPts:                   nil,
+		prevMask:                  gocv.NewMat(),
+		transformationsGetterCopy: transformationsGetterCopy,
 	}
 }
 

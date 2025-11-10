@@ -604,12 +604,12 @@ func TestKeypointVote(t *testing.T) {
 	voteD := CreateKeypointsVotingDistance(math.Sqrt(8), 0.5)
 
 	tests := []struct {
-		name         string
-		detPoints    [][]float64
-		detScores    interface{}
-		objPoints    [][]float64
-		objScores    interface{}
-		expected     float64
+		name      string
+		detPoints [][]float64
+		detScores interface{}
+		objPoints [][]float64
+		objScores interface{}
+		expected  float64
 	}{
 		{
 			name:      "perfect match",
