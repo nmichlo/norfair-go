@@ -45,87 +45,116 @@ func Cdist(XA, XB *mat.Dense, metric string) *mat.Dense {
 
 	switch metric {
 	case "euclidean":
-		for i := 0; i < rowsA; i++ {
-			for j := 0; j < rowsB; j++ {
-				rowA := XA.RawRowView(i)
-				rowB := XB.RawRowView(j)
-				var sum float64
-				for k := range rowA {
-					diff := rowA[k] - rowB[k]
-					sum += diff * diff
-				}
-				result.Set(i, j, math.Sqrt(sum))
-			}
-		}
-
+		cdistEuclidean(XA, XB, result)
 	case "cityblock", "manhattan":
-		for i := 0; i < rowsA; i++ {
-			for j := 0; j < rowsB; j++ {
-				rowA := XA.RawRowView(i)
-				rowB := XB.RawRowView(j)
-				var sum float64
-				for k := range rowA {
-					sum += math.Abs(rowA[k] - rowB[k])
-				}
-				result.Set(i, j, sum)
-			}
-		}
-
+		cdistManhattan(XA, XB, result)
 	case "cosine":
-		for i := 0; i < rowsA; i++ {
-			for j := 0; j < rowsB; j++ {
-				rowA := XA.RawRowView(i)
-				rowB := XB.RawRowView(j)
-				var dot, normA, normB float64
-				for k := range rowA {
-					dot += rowA[k] * rowB[k]
-					normA += rowA[k] * rowA[k]
-					normB += rowB[k] * rowB[k]
-				}
-				normA = math.Sqrt(normA)
-				normB = math.Sqrt(normB)
-				if normA == 0 || normB == 0 {
-					result.Set(i, j, 0)
-				} else {
-					// Cosine distance = 1 - cosine similarity
-					result.Set(i, j, 1.0-dot/(normA*normB))
-				}
-			}
-		}
-
+		cdistCosine(XA, XB, result)
 	case "sqeuclidean":
-		for i := 0; i < rowsA; i++ {
-			for j := 0; j < rowsB; j++ {
-				rowA := XA.RawRowView(i)
-				rowB := XB.RawRowView(j)
-				var sum float64
-				for k := range rowA {
-					diff := rowA[k] - rowB[k]
-					sum += diff * diff
-				}
-				result.Set(i, j, sum)
-			}
-		}
-
+		cdistSquaredEuclidean(XA, XB, result)
 	case "chebyshev":
-		for i := 0; i < rowsA; i++ {
-			for j := 0; j < rowsB; j++ {
-				rowA := XA.RawRowView(i)
-				rowB := XB.RawRowView(j)
-				var maxDiff float64
-				for k := range rowA {
-					diff := math.Abs(rowA[k] - rowB[k])
-					if diff > maxDiff {
-						maxDiff = diff
-					}
-				}
-				result.Set(i, j, maxDiff)
-			}
-		}
-
+		cdistChebyshev(XA, XB, result)
 	default:
 		panic(fmt.Sprintf("unsupported metric: %s", metric))
 	}
 
 	return result
+}
+
+func cdistEuclidean(XA, XB, result *mat.Dense) {
+	rowsA, _ := XA.Dims()
+	rowsB, _ := XB.Dims()
+
+	for i := 0; i < rowsA; i++ {
+		for j := 0; j < rowsB; j++ {
+			rowA := XA.RawRowView(i)
+			rowB := XB.RawRowView(j)
+			var sum float64
+			for k := range rowA {
+				diff := rowA[k] - rowB[k]
+				sum += diff * diff
+			}
+			result.Set(i, j, math.Sqrt(sum))
+		}
+	}
+}
+
+func cdistManhattan(XA, XB, result *mat.Dense) {
+	rowsA, _ := XA.Dims()
+	rowsB, _ := XB.Dims()
+
+	for i := 0; i < rowsA; i++ {
+		for j := 0; j < rowsB; j++ {
+			rowA := XA.RawRowView(i)
+			rowB := XB.RawRowView(j)
+			var sum float64
+			for k := range rowA {
+				sum += math.Abs(rowA[k] - rowB[k])
+			}
+			result.Set(i, j, sum)
+		}
+	}
+}
+
+func cdistCosine(XA, XB, result *mat.Dense) {
+	rowsA, _ := XA.Dims()
+	rowsB, _ := XB.Dims()
+
+	for i := 0; i < rowsA; i++ {
+		for j := 0; j < rowsB; j++ {
+			rowA := XA.RawRowView(i)
+			rowB := XB.RawRowView(j)
+			var dot, normA, normB float64
+			for k := range rowA {
+				dot += rowA[k] * rowB[k]
+				normA += rowA[k] * rowA[k]
+				normB += rowB[k] * rowB[k]
+			}
+			normA = math.Sqrt(normA)
+			normB = math.Sqrt(normB)
+			if normA == 0 || normB == 0 {
+				result.Set(i, j, 0)
+			} else {
+				result.Set(i, j, 1.0-dot/(normA*normB))
+			}
+		}
+	}
+}
+
+func cdistSquaredEuclidean(XA, XB, result *mat.Dense) {
+	rowsA, _ := XA.Dims()
+	rowsB, _ := XB.Dims()
+
+	for i := 0; i < rowsA; i++ {
+		for j := 0; j < rowsB; j++ {
+			rowA := XA.RawRowView(i)
+			rowB := XB.RawRowView(j)
+			var sum float64
+			for k := range rowA {
+				diff := rowA[k] - rowB[k]
+				sum += diff * diff
+			}
+			result.Set(i, j, sum)
+		}
+	}
+}
+
+func cdistChebyshev(XA, XB, result *mat.Dense) {
+	rowsA, _ := XA.Dims()
+	rowsB, _ := XB.Dims()
+
+	for i := 0; i < rowsA; i++ {
+		for j := 0; j < rowsB; j++ {
+			rowA := XA.RawRowView(i)
+			rowB := XB.RawRowView(j)
+			var maxDiff float64
+			for k := range rowA {
+				diff := math.Abs(rowA[k] - rowB[k])
+				if diff > maxDiff {
+					maxDiff = diff
+				}
+			}
+			result.Set(i, j, maxDiff)
+		}
+	}
 }

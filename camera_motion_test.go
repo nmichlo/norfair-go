@@ -927,10 +927,10 @@ func TestMotionEstimator_ComputeTranslation_Small(t *testing.T) {
 	defer frame2.Close()
 
 	// First update initializes reference frame
-	coordTransformations := estimator.Update(frame1, gocv.NewMat())
+	_ = estimator.Update(frame1, gocv.NewMat())
 
 	// Second update should compute transformation
-	coordTransformations = estimator.Update(frame2, gocv.NewMat())
+	coordTransformations := estimator.Update(frame2, gocv.NewMat())
 
 	if coordTransformations == nil {
 		t.Fatal("Expected coordinate transformations, got nil")
@@ -977,10 +977,10 @@ func TestMotionEstimator_ComputeTranslation_Large(t *testing.T) {
 	defer frame2.Close()
 
 	// First update initializes reference frame
-	coordTransformations := estimator.Update(frame1, gocv.NewMat())
+	_ = estimator.Update(frame1, gocv.NewMat())
 
 	// Second update should compute transformation
-	coordTransformations = estimator.Update(frame2, gocv.NewMat())
+	coordTransformations := estimator.Update(frame2, gocv.NewMat())
 
 	if coordTransformations == nil {
 		t.Fatal("Expected coordinate transformations, got nil")

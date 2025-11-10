@@ -517,6 +517,26 @@ func (df *MetricsDataFrame) GetRow(videoName string) (MetricsRow, bool) {
 	return MetricsRow{}, false
 }
 
+// metricExtractors maps metric names to functions that extract values from MetricsRow
+var metricExtractors = map[string]func(MetricsRow) float64{
+	"MOTA":              func(r MetricsRow) float64 { return r.MOTA },
+	"MOTP":              func(r MetricsRow) float64 { return r.MOTP },
+	"Precision":         func(r MetricsRow) float64 { return r.Precision },
+	"Recall":            func(r MetricsRow) float64 { return r.Recall },
+	"MT":                func(r MetricsRow) float64 { return r.MT },
+	"ML":                func(r MetricsRow) float64 { return r.ML },
+	"PT":                func(r MetricsRow) float64 { return r.PT },
+	"IDP":               func(r MetricsRow) float64 { return r.IDP },
+	"IDR":               func(r MetricsRow) float64 { return r.IDR },
+	"IDF1":              func(r MetricsRow) float64 { return r.IDF1 },
+	"NumMatches":        func(r MetricsRow) float64 { return float64(r.NumMatches) },
+	"NumFalsePositives": func(r MetricsRow) float64 { return float64(r.NumFalsePositives) },
+	"NumMisses":         func(r MetricsRow) float64 { return float64(r.NumMisses) },
+	"NumSwitches":       func(r MetricsRow) float64 { return float64(r.NumSwitches) },
+	"NumObjects":        func(r MetricsRow) float64 { return float64(r.NumObjects) },
+	"NumFragmentations": func(r MetricsRow) float64 { return float64(r.NumFragmentations) },
+}
+
 // Get retrieves a specific metric value for a video.
 //
 // Parameters:
@@ -530,44 +550,12 @@ func (df *MetricsDataFrame) Get(videoName, metricName string) (float64, bool) {
 		return 0.0, false
 	}
 
-	// Use reflection to get field by name (simpler than giant switch statement)
-	// For now, implement common metrics with switch for performance
-	switch metricName {
-	case "MOTA":
-		return row.MOTA, true
-	case "MOTP":
-		return row.MOTP, true
-	case "Precision":
-		return row.Precision, true
-	case "Recall":
-		return row.Recall, true
-	case "MT":
-		return row.MT, true
-	case "ML":
-		return row.ML, true
-	case "PT":
-		return row.PT, true
-	case "IDP":
-		return row.IDP, true
-	case "IDR":
-		return row.IDR, true
-	case "IDF1":
-		return row.IDF1, true
-	case "NumMatches":
-		return float64(row.NumMatches), true
-	case "NumFalsePositives":
-		return float64(row.NumFalsePositives), true
-	case "NumMisses":
-		return float64(row.NumMisses), true
-	case "NumSwitches":
-		return float64(row.NumSwitches), true
-	case "NumObjects":
-		return float64(row.NumObjects), true
-	case "NumFragmentations":
-		return float64(row.NumFragmentations), true
-	default:
+	extractor, exists := metricExtractors[metricName]
+	if !exists {
 		return 0.0, false
 	}
+
+	return extractor(row), true
 }
 
 // =============================================================================

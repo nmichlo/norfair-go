@@ -36,87 +36,87 @@ func NewScalarDistance(distanceFunction func(*Detection, *TrackedObject) float64
 
 // GetDistances computes the distance matrix using scalar distance function
 func (sd *ScalarDistance) GetDistances(objects []*TrackedObject, candidates interface{}) *mat.Dense {
-	// Convert candidates to slice
-	var candList []interface{}
-	switch v := candidates.(type) {
-	case []Detection:
-		candList = make([]interface{}, len(v))
-		for i := range v {
-			candList[i] = &v[i]
-		}
-	case []*Detection:
-		candList = make([]interface{}, len(v))
-		for i := range v {
-			candList[i] = v[i]
-		}
-	case []TrackedObject:
-		candList = make([]interface{}, len(v))
-		for i := range v {
-			candList[i] = &v[i]
-		}
-	case []*TrackedObject:
-		candList = make([]interface{}, len(v))
-		for i := range v {
-			candList[i] = v[i]
-		}
-	default:
-		panic(fmt.Sprintf("unsupported candidates type: %T", candidates))
-	}
+	candList := convertCandidatesToList(candidates)
+	distanceMatrix := createInfinityMatrix(len(candList), len(objects))
 
-	// Create distance matrix filled with infinity
-	numCandidates := len(candList)
-	numObjects := len(objects)
-	distanceMatrix := mat.NewDense(numCandidates, numObjects, nil)
-	for i := 0; i < numCandidates; i++ {
-		for j := 0; j < numObjects; j++ {
-			distanceMatrix.Set(i, j, math.Inf(1))
-		}
-	}
-
-	// Return early if empty
-	if numCandidates == 0 || numObjects == 0 {
+	if len(candList) == 0 || len(objects) == 0 {
 		return distanceMatrix
 	}
 
-	// Compute distances for each pair
-	for c := 0; c < numCandidates; c++ {
-		for o := 0; o < numObjects; o++ {
-			obj := objects[o]
-
-			// Get candidate label
-			var candLabel *string
-			var candDet *Detection
-
-			switch cand := candList[c].(type) {
-			case *Detection:
-				candLabel = cand.Label
-				candDet = cand
-			case *TrackedObject:
-				candLabel = cand.Label
-				// Skip - can't compute scalar distance between two TrackedObjects
-				continue
-			}
-
-			// Label filtering - skip if labels don't match
-			if candLabel != nil && obj.Label != nil {
-				if *candLabel != *obj.Label {
-					continue // Leave as inf
-				}
-			} else if candLabel != nil || obj.Label != nil {
-				// One has label, other doesn't - warn and skip
-				log.Printf("Warning: comparing objects with mismatched label presence")
-				continue
-			}
-
-			// Compute distance
-			if candDet != nil {
-				distance := sd.distanceFunction(candDet, obj)
-				distanceMatrix.Set(c, o, distance)
+	for c := 0; c < len(candList); c++ {
+		for o := 0; o < len(objects); o++ {
+			if dist, ok := sd.computePairDistance(candList[c], objects[o]); ok {
+				distanceMatrix.Set(c, o, dist)
 			}
 		}
 	}
 
 	return distanceMatrix
+}
+
+func convertCandidatesToList(candidates interface{}) []interface{} {
+	switch v := candidates.(type) {
+	case []Detection:
+		result := make([]interface{}, len(v))
+		for i := range v {
+			result[i] = &v[i]
+		}
+		return result
+	case []*Detection:
+		result := make([]interface{}, len(v))
+		for i := range v {
+			result[i] = v[i]
+		}
+		return result
+	case []TrackedObject:
+		result := make([]interface{}, len(v))
+		for i := range v {
+			result[i] = &v[i]
+		}
+		return result
+	case []*TrackedObject:
+		result := make([]interface{}, len(v))
+		for i := range v {
+			result[i] = v[i]
+		}
+		return result
+	default:
+		panic(fmt.Sprintf("unsupported candidates type: %T", candidates))
+	}
+}
+
+func createInfinityMatrix(rows, cols int) *mat.Dense {
+	matrix := mat.NewDense(rows, cols, nil)
+	for i := 0; i < rows; i++ {
+		for j := 0; j < cols; j++ {
+			matrix.Set(i, j, math.Inf(1))
+		}
+	}
+	return matrix
+}
+
+func (sd *ScalarDistance) computePairDistance(candidate interface{}, obj *TrackedObject) (float64, bool) {
+	switch cand := candidate.(type) {
+	case *Detection:
+		if labelsMatch(cand.Label, obj.Label) {
+			return sd.distanceFunction(cand, obj), true
+		}
+	case *TrackedObject:
+		// Can't compute scalar distance between two TrackedObjects
+		return 0, false
+	}
+	return 0, false
+}
+
+func labelsMatch(label1, label2 *string) bool {
+	if label1 != nil && label2 != nil {
+		return *label1 == *label2
+	}
+	if label1 != nil || label2 != nil {
+		log.Printf("Warning: comparing objects with mismatched label presence")
+		return false
+	}
+	return true
 }
 
 // =============================================================================
@@ -195,138 +195,123 @@ func NewVectorizedDistance(distanceFunction func(candidates, objects *mat.Dense)
 
 // GetDistances computes the distance matrix using vectorized distance function
 func (vd *VectorizedDistance) GetDistances(objects []*TrackedObject, candidates interface{}) *mat.Dense {
-	// Convert candidates to slice
-	var candList []interface{}
-	switch v := candidates.(type) {
-	case []Detection:
-		candList = make([]interface{}, len(v))
-		for i := range v {
-			candList[i] = &v[i]
-		}
-	case []*Detection:
-		candList = make([]interface{}, len(v))
-		for i := range v {
-			candList[i] = v[i]
-		}
-	case []TrackedObject:
-		candList = make([]interface{}, len(v))
-		for i := range v {
-			candList[i] = &v[i]
-		}
-	case []*TrackedObject:
-		candList = make([]interface{}, len(v))
-		for i := range v {
-			candList[i] = v[i]
-		}
-	default:
-		panic(fmt.Sprintf("unsupported candidates type: %T", candidates))
-	}
+	candList := convertCandidatesToList(candidates)
+	distanceMatrix := createInfinityMatrix(len(candList), len(objects))
 
-	numCandidates := len(candList)
-	numObjects := len(objects)
-
-	// Create distance matrix filled with infinity
-	distanceMatrix := mat.NewDense(numCandidates, numObjects, nil)
-	for i := 0; i < numCandidates; i++ {
-		for j := 0; j < numObjects; j++ {
-			distanceMatrix.Set(i, j, math.Inf(1))
-		}
-	}
-
-	// Return early if empty
-	if numCandidates == 0 || numObjects == 0 {
+	if len(candList) == 0 || len(objects) == 0 {
 		return distanceMatrix
 	}
 
-	// Extract labels and convert to strings
-	objectLabels := make([]string, numObjects)
-	for i := range objects {
-		if objects[i].Label != nil {
-			objectLabels[i] = *objects[i].Label
-		} else {
-			objectLabels[i] = "None"
-		}
+	objectLabels := extractObjectLabels(objects)
+	candidateLabels := extractCandidateLabels(candList)
+	uniqueLabels := findIntersection(unique(objectLabels), unique(candidateLabels))
+
+	for _, label := range uniqueLabels {
+		vd.processLabelGroup(label, objects, candList, objectLabels, candidateLabels, distanceMatrix)
 	}
 
-	candidateLabels := make([]string, numCandidates)
+	return distanceMatrix
+}
+
+func extractObjectLabels(objects []*TrackedObject) []string {
+	labels := make([]string, len(objects))
+	for i := range objects {
+		if objects[i].Label != nil {
+			labels[i] = *objects[i].Label
+		} else {
+			labels[i] = "None"
+		}
+	}
+	return labels
+}
+
+func extractCandidateLabels(candList []interface{}) []string {
+	labels := make([]string, len(candList))
 	for i, cand := range candList {
 		switch c := cand.(type) {
 		case *Detection:
 			if c.Label != nil {
-				candidateLabels[i] = *c.Label
+				labels[i] = *c.Label
 			} else {
-				candidateLabels[i] = "None"
+				labels[i] = "None"
 			}
 		case *TrackedObject:
 			if c.Label != nil {
-				candidateLabels[i] = *c.Label
+				labels[i] = *c.Label
 			} else {
-				candidateLabels[i] = "None"
+				labels[i] = "None"
 			}
 		}
 	}
+	return labels
+}
 
-	// Find unique labels that appear in both
-	uniqueLabels := findIntersection(unique(objectLabels), unique(candidateLabels))
+func (vd *VectorizedDistance) processLabelGroup(
+	label string,
+	objects []*TrackedObject,
+	candList []interface{},
+	objectLabels, candidateLabels []string,
+	distanceMatrix *mat.Dense,
+) {
+	objIndices := findLabelIndices(objectLabels, label)
+	candIndices := findLabelIndices(candidateLabels, label)
 
-	// Process each label group
-	for _, label := range uniqueLabels {
-		// Find indices for this label
-		objIndices := findLabelIndices(objectLabels, label)
-		candIndices := findLabelIndices(candidateLabels, label)
-
-		if len(objIndices) == 0 || len(candIndices) == 0 {
-			continue
-		}
-
-		// Stack object estimates
-		objRows := len(objIndices)
-		if objRows == 0 {
-			continue
-		}
-		firstObjEst := objects[objIndices[0]].Estimate
-		objEstRows, objEstCols := firstObjEst.Dims()
-		flattenedCols := objEstRows * objEstCols
-		stackedObjects := mat.NewDense(objRows, flattenedCols, nil)
-		for i, idx := range objIndices {
-			flatData := flattenMatrix(objects[idx].Estimate)
-			for j, val := range flatData {
-				stackedObjects.Set(i, j, val)
-			}
-		}
-
-		// Stack candidate data (detection points or tracked object estimates)
-		candRows := len(candIndices)
-		stackedCandidates := mat.NewDense(candRows, flattenedCols, nil)
-		for i, idx := range candIndices {
-			var flatData []float64
-			cand := candList[idx]
-
-			// Check if it's a Detection or TrackedObject using type assertion
-			if det, ok := cand.(*Detection); ok {
-				flatData = flattenMatrix(det.Points)
-			} else if obj, ok := cand.(*TrackedObject); ok {
-				flatData = flattenMatrix(obj.Estimate)
-			}
-
-			for j, val := range flatData {
-				stackedCandidates.Set(i, j, val)
-			}
-		}
-
-		// Compute distances for this label group
-		distances := vd.distanceFunction(stackedCandidates, stackedObjects)
-
-		// Assign back to distance matrix using fancy indexing
-		dRows, dCols := distances.Dims()
-		for i := 0; i < dRows; i++ {
-			for j := 0; j < dCols; j++ {
-				distanceMatrix.Set(candIndices[i], objIndices[j], distances.At(i, j))
-			}
-		}
+	if len(objIndices) == 0 || len(candIndices) == 0 {
+		return
 	}
 
-	return distanceMatrix
+	stackedObjects := stackObjectEstimates(objects, objIndices)
+	stackedCandidates := stackCandidateData(candList, candIndices, stackedObjects.RawMatrix().Cols)
+
+	distances := vd.distanceFunction(stackedCandidates, stackedObjects)
+	assignDistancesToMatrix(distances, candIndices, objIndices, distanceMatrix)
+}
+
+func stackObjectEstimates(objects []*TrackedObject, indices []int) *mat.Dense {
+	if len(indices) == 0 {
+		return nil
+	}
+
+	firstEst := objects[indices[0]].Estimate
+	rows, cols := firstEst.Dims()
+	flattenedCols := rows * cols
+
+	stacked := mat.NewDense(len(indices), flattenedCols, nil)
+	for i, idx := range indices {
+		flatData := flattenMatrix(objects[idx].Estimate)
+		for j, val := range flatData {
+			stacked.Set(i, j, val)
+		}
+	}
+	return stacked
+}
+
+func stackCandidateData(candList []interface{}, indices []int, flattenedCols int) *mat.Dense {
+	stacked := mat.NewDense(len(indices), flattenedCols, nil)
+	for i, idx := range indices {
+		var flatData []float64
+		cand := candList[idx]
+
+		if det, ok := cand.(*Detection); ok {
+			flatData = flattenMatrix(det.Points)
+		} else if obj, ok := cand.(*TrackedObject); ok {
+			flatData = flattenMatrix(obj.Estimate)
+		}
+
+		for j, val := range flatData {
+			stacked.Set(i, j, val)
+		}
+	}
+	return stacked
+}
+
+func assignDistancesToMatrix(distances *mat.Dense, candIndices, objIndices []int, distanceMatrix *mat.Dense) {
+	rows, cols := distances.Dims()
+	for i := 0; i < rows; i++ {
+		for j := 0; j < cols; j++ {
+			distanceMatrix.Set(candIndices[i], objIndices[j], distances.At(i, j))
+		}
+	}
 }
 
 // =============================================================================

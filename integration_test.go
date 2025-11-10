@@ -305,10 +305,11 @@ func TestIntegration_ReIDEnabled(t *testing.T) {
 		mat.NewDense(1, 2, []float64{100.0, 100.0}),
 		nil,
 	)
-	trackedObjects := tracker.Update([]*norfairgo.Detection{det}, 1, nil)
+	_ = tracker.Update([]*norfairgo.Detection{det}, 1, nil)
 
 	// After ReID matching and re-initialization, object should reappear
 	// May take a frame or two to become active again
+	var trackedObjects []*norfairgo.TrackedObject
 	for frame := 8; frame < 12; frame++ {
 		det, _ := norfairgo.NewDetection(
 			mat.NewDense(1, 2, []float64{100.0, 100.0}),
