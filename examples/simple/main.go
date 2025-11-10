@@ -31,15 +31,16 @@ func main() {
 	fmt.Println("\nSimulating 20 frames of tracking...")
 	fmt.Println("Two objects moving across the frame\n")
 
+	n := 20
 	// Simulate detections from an object detector over multiple frames
 	// Format: bounding boxes as [[x_min, y_min], [x_max, y_max]]
-	for frame := 0; frame < 20; frame++ {
+	for frame := 0; frame < n; frame++ {
 		// Object 1: Moving right and down
 		x1 := float64(100 + frame*10)
 		y1 := float64(100 + frame*5)
 		det1, err := norfairgo.NewDetection(
 			mat.NewDense(2, 2, []float64{
-				x1, y1,           // top-left corner
+				x1, y1, // top-left corner
 				x1 + 100, y1 + 100, // bottom-right corner
 			}),
 			nil, // optional config (scores, data, label, embedding)
@@ -62,7 +63,14 @@ func main() {
 			log.Fatalf("Failed to create detection 2: %v", err)
 		}
 
-		detections := []*norfairgo.Detection{det1, det2}
+		// only add frames based on certain conditions to simulate loss
+		var detections []*norfairgo.Detection
+		if frame < n-12 {
+			detections = append(detections, det1)
+		}
+		if frame >= 5 {
+			detections = append(detections, det2)
+		}
 
 		// Update tracker with current frame detections
 		trackedObjects := tracker.Update(detections, 1, nil)
