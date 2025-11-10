@@ -442,9 +442,12 @@ func hungarianMatching(distanceMatrix [][]float64, threshold float64) ([][2]int,
 	assignments, unmatchedRows, unmatchedCols := scipy.LinearSumAssignment(distanceMatrix, threshold)
 
 	// Convert scipy.Assignment to [][2]int format
-	matches := make([][2]int, len(assignments))
-	for i, assign := range assignments {
-		matches[i] = [2]int{assign.RowIdx, assign.ColIdx}
+	var matches [][2]int
+	if len(assignments) > 0 {
+		matches = make([][2]int, len(assignments))
+		for i, assign := range assignments {
+			matches[i] = [2]int{assign.RowIdx, assign.ColIdx}
+		}
 	}
 
 	return matches, unmatchedRows, unmatchedCols
