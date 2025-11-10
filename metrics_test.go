@@ -1951,3 +1951,184 @@ func TestAccumulators_Reset(t *testing.T) {
 		t.Errorf("Failed to create accumulator after reset: %v", err)
 	}
 }
+
+// =============================================================================
+// MetricsDataFrame Tests
+// =============================================================================
+
+func TestMetricsDataFrame_NewAndAddRow(t *testing.T) {
+	df := NewMetricsDataFrame()
+
+	if df == nil {
+		t.Fatal("NewMetricsDataFrame() returned nil")
+	}
+	if len(df.Rows) != 0 {
+		t.Errorf("Expected empty DataFrame, got %d rows", len(df.Rows))
+	}
+
+	// Add a row
+	row := MetricsRow{
+		VideoName: "video1",
+		MOTA:      0.75,
+		MOTP:      0.85,
+	}
+	df.AddRow(row)
+
+	if len(df.Rows) != 1 {
+		t.Errorf("Expected 1 row, got %d", len(df.Rows))
+	}
+	if df.Rows[0].VideoName != "video1" {
+		t.Errorf("Expected VideoName 'video1', got '%s'", df.Rows[0].VideoName)
+	}
+}
+
+func TestMetricsDataFrame_GetRow(t *testing.T) {
+	df := NewMetricsDataFrame()
+
+	row1 := MetricsRow{VideoName: "video1", MOTA: 0.75}
+	row2 := MetricsRow{VideoName: "video2", MOTA: 0.85}
+	df.AddRow(row1)
+	df.AddRow(row2)
+
+	// Test found
+	found, ok := df.GetRow("video1")
+	if !ok {
+		t.Error("Expected to find video1")
+	}
+	if found.MOTA != 0.75 {
+		t.Errorf("Expected MOTA 0.75, got %v", found.MOTA)
+	}
+
+	// Test not found
+	_, ok = df.GetRow("nonexistent")
+	if ok {
+		t.Error("Expected not to find nonexistent video")
+	}
+}
+
+func TestMetricsDataFrame_Get_AllMetrics(t *testing.T) {
+	df := NewMetricsDataFrame()
+
+	row := MetricsRow{
+		VideoName:         "video1",
+		MOTA:              0.75,
+		MOTP:              0.85,
+		Precision:         0.90,
+		Recall:            0.88,
+		MT:                0.60,
+		ML:                0.10,
+		PT:                0.30,
+		IDP:               0.92,
+		IDR:               0.87,
+		IDF1:              0.89,
+		NumMatches:        100,
+		NumFalsePositives: 10,
+		NumMisses:         15,
+		NumSwitches:       5,
+		NumObjects:        110,
+		NumFragmentations: 3,
+	}
+	df.AddRow(row)
+
+	tests := []struct {
+		metricName string
+		expected   float64
+	}{
+		{"MOTA", 0.75},
+		{"MOTP", 0.85},
+		{"Precision", 0.90},
+		{"Recall", 0.88},
+		{"MT", 0.60},
+		{"ML", 0.10},
+		{"PT", 0.30},
+		{"IDP", 0.92},
+		{"IDR", 0.87},
+		{"IDF1", 0.89},
+		{"NumMatches", 100.0},
+		{"NumFalsePositives", 10.0},
+		{"NumMisses", 15.0},
+		{"NumSwitches", 5.0},
+		{"NumObjects", 110.0},
+		{"NumFragmentations", 3.0},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.metricName, func(t *testing.T) {
+			value, ok := df.Get("video1", tc.metricName)
+			if !ok {
+				t.Errorf("Expected to find metric %s", tc.metricName)
+			}
+			if value != tc.expected {
+				t.Errorf("Expected %s=%v, got %v", tc.metricName, tc.expected, value)
+			}
+		})
+	}
+}
+
+func TestMetricsDataFrame_Get_VideoNotFound(t *testing.T) {
+	df := NewMetricsDataFrame()
+
+	row := MetricsRow{VideoName: "video1", MOTA: 0.75}
+	df.AddRow(row)
+
+	_, ok := df.Get("nonexistent", "MOTA")
+	if ok {
+		t.Error("Expected not to find metric for nonexistent video")
+	}
+}
+
+func TestMetricsDataFrame_Get_MetricNotFound(t *testing.T) {
+	df := NewMetricsDataFrame()
+
+	row := MetricsRow{VideoName: "video1", MOTA: 0.75}
+	df.AddRow(row)
+
+	_, ok := df.Get("video1", "InvalidMetric")
+	if ok {
+		t.Error("Expected not to find invalid metric")
+	}
+}
+
+func TestMetricsDataFrame_Get_OverallRow(t *testing.T) {
+	df := NewMetricsDataFrame()
+
+	overall := MetricsRow{VideoName: "OVERALL", MOTA: 0.80, MOTP: 0.90}
+	df.AddRow(overall)
+
+	value, ok := df.Get("OVERALL", "MOTA")
+	if !ok {
+		t.Error("Expected to find OVERALL row")
+	}
+	if value != 0.80 {
+		t.Errorf("Expected MOTA=0.80, got %v", value)
+	}
+}
+
+func TestMetricsDataFrame_MultipleVideos(t *testing.T) {
+	df := NewMetricsDataFrame()
+
+	for i := 1; i <= 5; i++ {
+		row := MetricsRow{
+			VideoName: "video" + string(rune('0'+i)),
+			MOTA:      float64(i) * 0.1,
+		}
+		df.AddRow(row)
+	}
+
+	if len(df.Rows) != 5 {
+		t.Errorf("Expected 5 rows, got %d", len(df.Rows))
+	}
+
+	// Verify can retrieve all videos
+	for i := 1; i <= 5; i++ {
+		videoName := "video" + string(rune('0'+i))
+		value, ok := df.Get(videoName, "MOTA")
+		if !ok {
+			t.Errorf("Expected to find video %s", videoName)
+		}
+		expected := float64(i) * 0.1
+		if math.Abs(value-expected) > 1e-10 {
+			t.Errorf("Expected MOTA=%v for %s, got %v", expected, videoName, value)
+		}
+	}
+}

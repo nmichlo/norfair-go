@@ -15,6 +15,7 @@ import (
 type mockTrackedObjectForPaths struct {
 	estimate   *mat.Dense
 	id         *int
+	label      *string
 	absToRel   norfairgo.CoordinateTransformation
 	livePoints []bool
 }
@@ -27,9 +28,26 @@ func (m *mockTrackedObjectForPaths) GetID() *int {
 	return m.id
 }
 
+func (m *mockTrackedObjectForPaths) GetLabel() *string {
+	return m.label
+}
+
+func (m *mockTrackedObjectForPaths) GetLivePoints() []bool {
+	return m.livePoints
+}
+
 func (m *mockTrackedObjectForPaths) LivePoints() []bool {
 	return m.livePoints
 }
+
+// Ensure mockTrackedObjectForPaths implements norfairgo.TrackedObject
+var _ interface {
+	GetEstimate(bool) (*mat.Dense, error)
+	GetID() *int
+	GetLabel() *string
+	GetLivePoints() []bool
+	LivePoints() []bool
+} = (*mockTrackedObjectForPaths)(nil)
 
 // TestPaths_LazyInit verifies that mask is created on first Draw() call
 func TestPaths_LazyInit(t *testing.T) {
@@ -723,3 +741,6 @@ func TestAbsolutePaths_TransformPointsToRelative_Empty(t *testing.T) {
 		t.Errorf("Expected empty result, got %d points", len(relativePoints))
 	}
 }
+
+// NOTE: Additional tests for AbsolutePaths.Draw() with live TrackedObjects
+// are covered by integration tests due to complexity of creating mock TrackedObject instances
