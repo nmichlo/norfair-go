@@ -2,13 +2,11 @@
 // SPDX-License-Identifier: BSD-3-Clause
 //
 // This file contains a Go port of scipy.optimize.linear_sum_assignment behavior
-// Original source: https://github.com/scipy/scipy/blob/main/scipy/optimize/_linear_sum_assignment.py
 //
-// Original Copyright (c) 2001-2002 Enthought, Inc. 2003-2024, SciPy Developers
-// Original License: BSD-3-Clause
-//
-// Uses go-hungarian library (MIT License) by Arthur Kushman for the underlying Hungarian algorithm.
-// See LICENSE file in this directory and THIRD_PARTY_LICENSES.md in repository root.
+// 1. scipy
+//   Original Source: https://github.com/scipy/scipy/tree/main/scipy/optimize
+//   Original Copyright (c) 2001-2002 Enthought, Inc. 2003-2024, SciPy Developers
+//   Original License: BSD-3-Clause
 
 package scipy
 

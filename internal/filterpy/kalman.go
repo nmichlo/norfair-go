@@ -1,13 +1,12 @@
 // Copyright 2025 Nathan Michlo
-// SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: BSD-3-Clause
 //
 // This file contains a Go port of filterpy.kalman.KalmanFilter
-// Original source: https://github.com/rlabbe/filterpy/blob/master/filterpy/kalman/kalman_filter.py
 //
-// Original Copyright (c) 2015 Roger R. Labbe Jr.
-// Original License: MIT
-//
-// See LICENSE file in this directory and THIRD_PARTY_LICENSES.md in repository root.
+// 1. filterpy
+//    Original Source: https://github.com/rlabbe/filterpy/blob/master/filterpy/kalman/kalman_filter.py
+//    Original Copyright (c) 2015 Roger R. Labbe Jr
+//    Original License: MIT
 
 package filterpy
 

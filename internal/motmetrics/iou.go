@@ -1,13 +1,12 @@
 // Copyright 2025 Nathan Michlo
-// SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: BSD-3-Clause
 //
-// This file contains a Go port of py-motmetrics IoU distance computation
-// Original source: https://github.com/cheind/py-motmetrics/blob/master/motmetrics/distances.py
+// This file contains a Go port of py-motmetrics IoU distance computation:
 //
-// Original Copyright (c) 2017-2019 Christoph Heindl, Jack Valmadre
-// Original License: MIT
-//
-// See LICENSE file in this directory and THIRD_PARTY_LICENSES.md in repository root.
+// 1. py-motmetrics
+//   Original Source: https://github.com/cheind/py-motmetrics/blob/master/motmetrics/distances.py
+//   Original Copyright (c) 2017-2019 Christoph Heindl, Jack Valmadre
+//   Original License: MIT
 
 package motmetrics
 

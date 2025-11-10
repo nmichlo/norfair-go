@@ -4,22 +4,22 @@
 // This file contains color definitions ported from multiple sources:
 //
 // 1. CSS Color Constants - PIL/Pillow ImageColor module
-//    Source: https://github.com/python-pillow/Pillow/blob/main/src/PIL/ImageColor.py
-//    Original Copyright (c) 1997-2011 Secret Labs AB, Fredrik Lundh
-//    Original Copyright (c) 2010-2024 Jeffrey A. Clark (Alex) and contributors
-//    Original License: HPND
+//    Original Source: https://github.com/python-pillow/Pillow/blob/main/src/PIL/ImageColor.py
+//    Original Copyright © 1997-2011 by Secret Labs AB
+//    Original Copyright © 1995-2011 by Fredrik Lundh and contributors
+//    Original Copyright © 2010 by Jeffrey A. Clark and contributors
+//    Original License: MIT-CMU
 //
 // 2. Tableau Color Palettes (tab10, tab20) - Matplotlib
-//    Source: https://github.com/matplotlib/matplotlib/blob/main/lib/matplotlib/_cm.py
-//    Original Copyright (c) 2012-2024 Matplotlib Development Team
-//    Original License: Matplotlib License (BSD-compatible)
+//    Original Source: https://github.com/matplotlib/matplotlib/blob/main/lib/matplotlib/_cm.py
+//    Original Copyright (c) 2002-2011 John D. Hunter
+//    Original Copyright (c) 2012- Matplotlib Development Team
+//    Original License: Matplotlib License
 //
 // 3. Colorblind Palette - Seaborn
-//    Source: https://github.com/mwaskom/seaborn/blob/master/seaborn/palettes.py
-//    Original Copyright (c) 2012-2024 Michael Waskom
+//    Original Source: https://github.com/mwaskom/seaborn/blob/master/seaborn/palettes.py
+//    Original Copyright (c) 2012-2023, Michael L. Waskom
 //    Original License: BSD-3-Clause
-//
-// See LICENSE file in this directory and THIRD_PARTY_LICENSES.md in repository root.
 
 package imaging
 
@@ -342,16 +342,16 @@ var Tab10 = []color.Color{
 // Tab20 palette (20 colors from Matplotlib).
 // Source: https://github.com/matplotlib/matplotlib/blob/main/lib/matplotlib/_cm.py
 var Tab20 = []color.Color{
-	{214, 127, 31}, {228, 173, 95},   // Blue
-	{134, 86, 255}, {184, 154, 255},  // Orange
-	{113, 178, 44}, {153, 208, 104},  // Green
-	{83, 64, 214}, {133, 112, 237},   // Red
+	{214, 127, 31}, {228, 173, 95}, // Blue
+	{134, 86, 255}, {184, 154, 255}, // Orange
+	{113, 178, 44}, {153, 208, 104}, // Green
+	{83, 64, 214}, {133, 112, 237}, // Red
 	{190, 117, 148}, {216, 165, 188}, // Purple
-	{107, 76, 140}, {157, 126, 186},  // Brown
+	{107, 76, 140}, {157, 126, 186}, // Brown
 	{218, 127, 227}, {235, 172, 243}, // Pink
 	{114, 114, 127}, {168, 168, 179}, // Gray
-	{51, 176, 188}, {111, 216, 222},  // Olive
-	{201, 195, 23}, {231, 227, 99},   // Cyan
+	{51, 176, 188}, {111, 216, 222}, // Olive
+	{201, 195, 23}, {231, 227, 99}, // Cyan
 }
 
 // Colorblind palette (8 colorblind-friendly colors from Seaborn).

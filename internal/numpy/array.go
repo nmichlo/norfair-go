@@ -2,12 +2,11 @@
 // SPDX-License-Identifier: BSD-3-Clause
 //
 // This file contains a Go port of numpy.linspace
-// Original source: https://github.com/numpy/numpy/blob/main/numpy/core/function_base.py
 //
-// Original Copyright (c) 2005-2024, NumPy Developers
-// Original License: BSD-3-Clause
-//
-// See LICENSE file in this directory and THIRD_PARTY_LICENSES.md in repository root.
+// 1. numpy
+//    Original Source: https://github.com/numpy/numpy/blob/main/numpy/core/function_base.py
+//    Original Copyright (c) 2005-2024, NumPy Developers
+//    Original License: BSD-3-Clause
 
 package numpy
 
