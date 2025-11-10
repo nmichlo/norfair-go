@@ -645,6 +645,10 @@ type Metrics struct {
 	MT                float64 // Mostly Tracked (% of GT tracks covered >= 80%)
 	ML                float64 // Mostly Lost (% of GT tracks covered <= 20%)
 	PT                float64 // Partially Tracked (% of GT tracks 20% < covered < 80%)
+	MTCount           int     // Mostly Tracked count (matches py-motmetrics output)
+	MLCount           int     // Mostly Lost count (matches py-motmetrics output)
+	PTCount           int     // Partially Tracked count (matches py-motmetrics output)
+	NumTracks         int     // Total number of unique ground truth tracks
 
 	// ID metrics (Phase 2.3)
 	IDP  float64 // ID Precision
@@ -752,6 +756,10 @@ func (a *Accumulators) ComputeMetrics() (*Metrics, error) {
 		MT:                mtPercent,
 		ML:                mlPercent,
 		PT:                ptPercent,
+		MTCount:           totalMT,
+		MLCount:           totalML,
+		PTCount:           totalPT,
+		NumTracks:         totalTracks,
 		IDP:               0.0, // Phase 2.3
 		IDR:               0.0, // Phase 2.3
 		IDF1:              0.0, // Phase 2.3
