@@ -294,47 +294,13 @@ Full API documentation is available at [pkg.go.dev/github.com/nmichlo/norfair-go
 - **`Video`** - Video I/O with progress tracking and codec selection
 - **`drawing.*`** - Visualization utilities for rendering tracked objects
 
-### Distance Functions
-
-The tracker supports multiple distance metrics for matching detections to tracked objects:
-
-| Function       | Type | Description | Best For                                          |
-|----------------|------|-------------|---------------------------------------------------|
-| `iou`          | Scalar | Intersection over Union | Bounding boxes                                    |
-| `euclidean`    | Scalar | Euclidean distance | Keypoints, centroids                              |
-| `manhattan` / `cityblock` | Scalar | Manhattan (L1) distance | Grid-based movement                               |
-| `cosine`       | Scalar | Cosine similarity | Feature embeddings                                |
-| `frobenius`    | Scalar | Frobenius norm | Matrix comparisons                                |
-| `sqeuclidean`  | Scalar | Squared Euclidean distance | Faster computations                               |
-| `chebyshev`    | Scalar | Chebyshev distance | Constrained movement                              |
-| **+more**      | Scalar | SciPy-compatible metrics | Various use cases (although many not implemnted.) |
-
-_Vectorised distance functions are not well supported in this Go port at this time._
-
-
-### Filter Options
-
-| Filter | Description                                      |
-|--------|--------------------------------------------------|
-| `OptimizedKalmanFilter` | Fast Kalman with simplified covariance (default) |
-| `FilterPyKalmanFilter` | Full filterpy equivalent Kalman filter           |
-
-## Attribution & License
+## License & Attribution
 
 **norfair-go** is licensed under the [BSD 3-Clause License](LICENSE).
 
-This project is a port and includes adaptations of algorithms and design patterns from:
-- **Original norfair** by Tryolabs - [BSD 3-Clause License](https://github.com/tryolabs/norfair/blob/master/LICENSE)
+This Go port is based on the original [norfair](https://github.com/tryolabs/norfair) by [Tryolabs](https://tryolabs.com/) (BSD 3-Clause). Their well-designed, detector-agnostic architecture made this port possible. Internal packages include code adapted from several Python libraries—see [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md) for complete attribution.
 
-Internal packages include code adapted from several Python libraries with their original licenses preserved. See [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md) for complete attribution.
-
-## Citation
-
-If you use this library in your research, please cite the original norfair paper as described [here](https://github.com/tryolabs/norfair)
-
-## Acknowledgments
-
-This project would not exist without the excellent work of the [norfair team at Tryolabs](https://github.com/tryolabs/norfair). Their well-designed, detector-agnostic architecture made this Go port possible.
+**Citation:** If using this library in research, please cite the original norfair paper as described [here](https://github.com/tryolabs/norfair).
 
 ---
 
