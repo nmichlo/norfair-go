@@ -1,0 +1,46 @@
+name: test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        go-version: ['1.23.x', '1.24.x']
+
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-go@v6
+        with:
+          go-version: ${{ matrix.go-version }}
+          cache: true
+
+      # - name: Install OpenCV
+      #   run: |
+      #     sudo apt-get update
+      #     sudo apt-get install -y \
+      #       libopencv-dev \
+      #       libopencv-contrib-dev \
+      #       pkg-config
+
+      - name: go mod download
+        run: go mod download
+
+      - name: go test
+        run: go test -race -coverprofile=coverage.out -covermode=atomic ./...
+
+
+      - name: codecov
+        uses: codecov/codecov-action@v4
+        if: matrix.go-version == '1.24.x'
+        with:
+          file: ./coverage.out
+          flags: unittests
+          fail_ci_if_error: false
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
