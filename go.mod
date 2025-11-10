@@ -2,7 +2,7 @@ module github.com/nmichlo/norfair-go
 
 go 1.24.0
 
-toolchain go1.24.9
+toolchain go1.24.10
 
 require (
 	github.com/arthurkushman/go-hungarian v0.0.0-20210331201642-2b0c3bc2fb3f
