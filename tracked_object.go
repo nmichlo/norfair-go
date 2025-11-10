@@ -192,71 +192,79 @@ func (to *TrackedObject) TrackerStep() {
 // Hit is called when the object is matched with a detection.
 // It updates the Kalman filter and manages hit counters.
 func (to *TrackedObject) Hit(detection *Detection, period int) error {
-	// Add to past detections
 	to.conditionallyAddToPastDetections(detection)
+	to.updateHitCounters(period)
 
-	// Update last detection and hit counter
-	to.LastDetection = detection
+	pointsOverThresholdMask, hPos := to.buildMeasurementMask(detection, period)
+	H := to.buildFullHMatrix(hPos)
+	detectionFlatten := to.flattenDetectionPoints(detection)
+
+	to.Filter.Update(detectionFlatten, nil, H)
+	to.handleFirstDetections(pointsOverThresholdMask, detectionFlatten)
+	to.updateDetectedMask(pointsOverThresholdMask)
+	to.updateEstimate()
+
+	return nil
+}
+
+func (to *TrackedObject) updateHitCounters(period int) {
 	to.HitCounter = min(to.HitCounter+2*period, to.config.HitCounterMax)
 
-	// Check if transitioning from initializing to initialized
 	if to.IsInitializing && to.HitCounter > to.config.InitializationDelay {
 		to.IsInitializing = false
 		to.acquireIDs()
 	}
+}
 
-	// Build measurement mask (H matrix) based on detection scores
-	var pointsOverThresholdMask []bool
-	var hPos *mat.Dense
-
+func (to *TrackedObject) buildMeasurementMask(detection *Detection, period int) ([]bool, *mat.Dense) {
 	if detection.Scores != nil {
-		// Has scores - build partial measurement mask
-		pointsOverThresholdMask = make([]bool, to.NumPoints)
-		matchedSensorsMask := make([]float64, to.DimZ)
+		return to.buildPartialMask(detection, period)
+	}
+	return to.buildFullMask(period)
+}
 
-		for i := 0; i < to.NumPoints; i++ {
-			pointsOverThresholdMask[i] = detection.Scores[i] > to.config.DetectionThreshold
-			if pointsOverThresholdMask[i] {
-				// Set diagonal entries for this point's dimensions
-				for d := 0; d < to.DimPoints; d++ {
-					idx := i*to.DimPoints + d
-					matchedSensorsMask[idx] = 1.0
-				}
-			}
-		}
+func (to *TrackedObject) buildPartialMask(detection *Detection, period int) ([]bool, *mat.Dense) {
+	pointsMask := make([]bool, to.NumPoints)
+	sensorsMask := make([]float64, to.DimZ)
 
-		// Build H_pos as diagonal matrix
-		hPos = mat.NewDense(to.DimZ, to.DimZ, nil)
-		for i := 0; i < to.DimZ; i++ {
-			hPos.Set(i, i, matchedSensorsMask[i])
-		}
-
-		// Update point hit counters for detected points
-		for i := 0; i < to.NumPoints; i++ {
-			if pointsOverThresholdMask[i] {
-				to.PointHitCounter[i] += 2 * period
-			}
-		}
-	} else {
-		// No scores - all points detected
-		pointsOverThresholdMask = make([]bool, to.NumPoints)
-		for i := 0; i < to.NumPoints; i++ {
-			pointsOverThresholdMask[i] = true
-		}
-
-		// H_pos is identity matrix
-		hPos = mat.NewDense(to.DimZ, to.DimZ, nil)
-		for i := 0; i < to.DimZ; i++ {
-			hPos.Set(i, i, 1.0)
-		}
-
-		// Update all point hit counters
-		for i := 0; i < to.NumPoints; i++ {
+	for i := 0; i < to.NumPoints; i++ {
+		pointsMask[i] = detection.Scores[i] > to.config.DetectionThreshold
+		if pointsMask[i] {
 			to.PointHitCounter[i] += 2 * period
+			for d := 0; d < to.DimPoints; d++ {
+				sensorsMask[i*to.DimPoints+d] = 1.0
+			}
 		}
 	}
 
-	// Clamp point hit counters
+	to.clampPointHitCounters()
+
+	hPos := mat.NewDense(to.DimZ, to.DimZ, nil)
+	for i := 0; i < to.DimZ; i++ {
+		hPos.Set(i, i, sensorsMask[i])
+	}
+
+	return pointsMask, hPos
+}
+
+func (to *TrackedObject) buildFullMask(period int) ([]bool, *mat.Dense) {
+	pointsMask := make([]bool, to.NumPoints)
+	for i := 0; i < to.NumPoints; i++ {
+		pointsMask[i] = true
+		to.PointHitCounter[i] += 2 * period
+	}
+
+	to.clampPointHitCounters()
+
+	hPos := mat.NewDense(to.DimZ, to.DimZ, nil)
+	for i := 0; i < to.DimZ; i++ {
+		hPos.Set(i, i, 1.0)
+	}
+
+	return pointsMask, hPos
+}
+
+func (to *TrackedObject) clampPointHitCounters() {
 	for i := 0; i < to.NumPoints; i++ {
 		if to.PointHitCounter[i] >= to.config.PointwiseHitCounterMax {
 			to.PointHitCounter[i] = to.config.PointwiseHitCounterMax
@@ -265,76 +273,65 @@ func (to *TrackedObject) Hit(detection *Detection, period int) error {
 			to.PointHitCounter[i] = 0
 		}
 	}
+}
 
-	// Build full H matrix: [H_pos | H_vel]
-	// H_vel is all zeros (don't measure velocity)
+func (to *TrackedObject) buildFullHMatrix(hPos *mat.Dense) *mat.Dense {
 	H := mat.NewDense(to.DimZ, 2*to.DimZ, nil)
-	// Copy H_pos to left half
 	for i := 0; i < to.DimZ; i++ {
 		for j := 0; j < to.DimZ; j++ {
 			H.Set(i, j, hPos.At(i, j))
 		}
 	}
-	// Right half (velocity) stays zero
+	return H
+}
 
-	// Prepare measurement: flatten detection points
-	detectionFlatten := mat.NewDense(to.DimZ, 1, nil)
+func (to *TrackedObject) flattenDetectionPoints(detection *Detection) *mat.Dense {
+	flattened := mat.NewDense(to.DimZ, 1, nil)
 	flatIdx := 0
 	for i := 0; i < to.NumPoints; i++ {
 		for d := 0; d < to.DimPoints; d++ {
-			detectionFlatten.Set(flatIdx, 0, detection.AbsolutePoints.At(i, d))
+			flattened.Set(flatIdx, 0, detection.AbsolutePoints.At(i, d))
 			flatIdx++
 		}
 	}
+	return flattened
+}
 
-	// Update Kalman filter
-	to.Filter.Update(detectionFlatten, nil, H)
-
-	// Handle first-time detected points
-	// Points detected for the first time need special initialization
+func (to *TrackedObject) handleFirstDetections(pointsMask []bool, detectionFlatten *mat.Dense) {
 	firstDetectionMask := make([]bool, to.DimZ)
 	for i := 0; i < to.NumPoints; i++ {
-		if pointsOverThresholdMask[i] && !to.DetectedAtLeastOncePoints[i] {
-			// This point is detected for the first time
+		if pointsMask[i] && !to.DetectedAtLeastOncePoints[i] {
 			for d := 0; d < to.DimPoints; d++ {
 				firstDetectionMask[i*to.DimPoints+d] = true
 			}
 		}
 	}
 
-	// Force position of first-time detected points to detection position
 	stateVector := to.Filter.GetStateVector()
+
 	for i := 0; i < to.DimZ; i++ {
 		if firstDetectionMask[i] {
 			stateVector.Set(i, 0, detectionFlatten.At(i, 0))
 		}
 	}
 
-	// Force velocity to zero for points never detected
 	for i := 0; i < to.NumPoints; i++ {
 		if !to.DetectedAtLeastOncePoints[i] {
-			// Set velocity entries to zero
 			for d := 0; d < to.DimPoints; d++ {
-				idx := i*to.DimPoints + d
-				stateVector.Set(to.DimZ+idx, 0, 0.0)
+				stateVector.Set(to.DimZ+i*to.DimPoints+d, 0, 0.0)
 			}
 		}
 	}
 
-	// Update state vector
 	to.Filter.SetStateVector(stateVector)
+}
 
-	// Update detected-at-least-once mask
+func (to *TrackedObject) updateDetectedMask(pointsMask []bool) {
 	for i := 0; i < to.NumPoints; i++ {
-		if pointsOverThresholdMask[i] {
+		if pointsMask[i] {
 			to.DetectedAtLeastOncePoints[i] = true
 		}
 	}
-
-	// Update cached estimate
-	to.updateEstimate()
-
-	return nil
 }
 
 // Merge merges another tracked object into this one (ReID matching).
