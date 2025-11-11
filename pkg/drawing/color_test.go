@@ -3,8 +3,8 @@ package drawing
 import (
 	"testing"
 
-	"github.com/nmichlo/norfair-go/color"
 	"github.com/nmichlo/norfair-go/internal/imaging"
+	"github.com/nmichlo/norfair-go/pkg/color"
 )
 
 // =============================================================================

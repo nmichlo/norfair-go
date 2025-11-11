@@ -3,7 +3,7 @@ package drawing
 import (
 	"image"
 
-	colorpkg "github.com/nmichlo/norfair-go/color"
+	colorpkg "github.com/nmichlo/norfair-go/pkg/color"
 	"gocv.io/x/gocv"
 )
 

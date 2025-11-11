@@ -52,7 +52,7 @@ package main
 
 import (
     "log"
-    norfairgo "github.com/nmichlo/norfair-go"
+    "github.com/nmichlo/norfair-go/pkg/norfairgo"
     "gonum.org/v1/gonum/mat"
 )
 
@@ -165,8 +165,8 @@ package main
 import (
     "fmt"
     "log"
-    norfairgo "github.com/nmichlo/norfair-go"
-    "github.com/nmichlo/norfair-go/drawing"
+    "github.com/nmichlo/norfair-go/pkg/drawing"
+    "github.com/nmichlo/norfair-go/pkg/norfairgo"
     "gocv.io/x/gocv"
     "gonum.org/v1/gonum/mat"
 )

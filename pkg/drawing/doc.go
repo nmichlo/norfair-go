@@ -6,7 +6,7 @@ frames using gocv.
 
 # Basic Usage
 
-	import "github.com/nmichlo/norfair-go/drawing"
+	import "github.com/nmichlo/norfair-go/pkg/drawing"
 
 	// Draw tracked points
 	drawing.DrawPoints(frame, trackedObjects,

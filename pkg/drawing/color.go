@@ -5,8 +5,8 @@ import (
 	"hash/fnv"
 	"strings"
 
-	"github.com/nmichlo/norfair-go/color"
 	"github.com/nmichlo/norfair-go/internal/imaging"
+	"github.com/nmichlo/norfair-go/pkg/color"
 )
 
 // Color is an alias for color.Color (BGR format for OpenCV).

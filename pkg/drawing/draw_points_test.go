@@ -3,8 +3,8 @@ package drawing
 import (
 	"testing"
 
-	"github.com/nmichlo/norfair-go/color"
 	"github.com/nmichlo/norfair-go/internal/testutil"
+	"github.com/nmichlo/norfair-go/pkg/color"
 	"gocv.io/x/gocv"
 	"gonum.org/v1/gonum/mat"
 )
@@ -658,6 +658,6 @@ func TestDrawPoints_DirectColor_GoldenImage(t *testing.T) {
 	DrawPoints(&frame, []interface{}{drawable2}, nil, nil, "blue", false, nil, false, true, nil, nil, true, false)
 
 	// Compare to golden image
-	goldenPath := "../testdata/drawing/draw_points_direct_color_golden.png"
+	goldenPath := "../../testdata/drawing/draw_points_direct_color_golden.png"
 	testutil.CompareToGoldenImage(t, &frame, goldenPath, 0.95)
 }

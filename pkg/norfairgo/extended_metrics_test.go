@@ -24,8 +24,8 @@ import (
 //
 // These tests validate the EvalMotChallenge function against known ground truth
 func TestEvalMotChallenge_Perfect(t *testing.T) {
-	gtPath := filepath.Join("testdata", "extended_metrics", "gt1.txt")
-	predPath := filepath.Join("testdata", "extended_metrics", "pred1.txt")
+	gtPath := filepath.Join("../../testdata", "extended_metrics", "gt1.txt")
+	predPath := filepath.Join("../../testdata", "extended_metrics", "pred1.txt")
 
 	metrics, err := EvalMotChallenge(gtPath, predPath, nil)
 	if err != nil {
@@ -50,8 +50,8 @@ func TestEvalMotChallenge_Perfect(t *testing.T) {
 }
 
 func TestEvalMotChallenge_MostlyLost(t *testing.T) {
-	gtPath := filepath.Join("testdata", "extended_metrics", "gt2.txt")
-	predPath := filepath.Join("testdata", "extended_metrics", "pred2.txt")
+	gtPath := filepath.Join("../../testdata", "extended_metrics", "gt2.txt")
+	predPath := filepath.Join("../../testdata", "extended_metrics", "pred2.txt")
 
 	metrics, err := EvalMotChallenge(gtPath, predPath, nil)
 	if err != nil {
@@ -70,8 +70,8 @@ func TestEvalMotChallenge_MostlyLost(t *testing.T) {
 }
 
 func TestEvalMotChallenge_Fragmented(t *testing.T) {
-	gtPath := filepath.Join("testdata", "extended_metrics", "gt3.txt")
-	predPath := filepath.Join("testdata", "extended_metrics", "pred3.txt")
+	gtPath := filepath.Join("../../testdata", "extended_metrics", "gt3.txt")
+	predPath := filepath.Join("../../testdata", "extended_metrics", "pred3.txt")
 
 	metrics, err := EvalMotChallenge(gtPath, predPath, nil)
 	if err != nil {
@@ -85,8 +85,8 @@ func TestEvalMotChallenge_Fragmented(t *testing.T) {
 }
 
 func TestEvalMotChallenge_Mixed(t *testing.T) {
-	gtPath := filepath.Join("testdata", "extended_metrics", "gt4.txt")
-	predPath := filepath.Join("testdata", "extended_metrics", "pred4.txt")
+	gtPath := filepath.Join("../../testdata", "extended_metrics", "gt4.txt")
+	predPath := filepath.Join("../../testdata", "extended_metrics", "pred4.txt")
 
 	metrics, err := EvalMotChallenge(gtPath, predPath, nil)
 	if err != nil {

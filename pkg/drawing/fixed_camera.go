@@ -6,7 +6,7 @@ import (
 	"gocv.io/x/gocv"
 	"gonum.org/v1/gonum/mat"
 
-	"github.com/nmichlo/norfair-go"
+	"github.com/nmichlo/norfair-go/pkg/norfairgo"
 )
 
 // FixedCamera stabilizes video based on camera motion by drawing frames on a larger canvas.

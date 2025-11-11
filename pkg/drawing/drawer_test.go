@@ -4,8 +4,8 @@ import (
 	"image"
 	"testing"
 
-	"github.com/nmichlo/norfair-go/color"
 	"github.com/nmichlo/norfair-go/internal/testutil"
+	"github.com/nmichlo/norfair-go/pkg/color"
 	"gocv.io/x/gocv"
 	"gonum.org/v1/gonum/mat"
 )
@@ -667,7 +667,7 @@ func TestDrawer_DrawingPrimitives_GoldenImage(t *testing.T) {
 
 	// Compare to golden image (95% similarity threshold for anti-aliasing tolerance)
 	// Golden image generated from Python norfair using tools/validate_drawing/main.py
-	goldenPath := "../testdata/drawing/drawing_primitives_golden.png"
+	goldenPath := "../../testdata/drawing/drawing_primitives_golden.png"
 
 	testutil.CompareToGoldenImage(t, &frame, goldenPath, 0.95)
 }

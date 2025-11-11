@@ -6,7 +6,7 @@ import (
 	"math"
 	"math/rand"
 
-	colorpkg "github.com/nmichlo/norfair-go/color"
+	colorpkg "github.com/nmichlo/norfair-go/pkg/color"
 	"gocv.io/x/gocv"
 	"gonum.org/v1/gonum/mat"
 )

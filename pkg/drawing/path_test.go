@@ -7,8 +7,8 @@ import (
 	"gocv.io/x/gocv"
 	"gonum.org/v1/gonum/mat"
 
-	"github.com/nmichlo/norfair-go"
 	"github.com/nmichlo/norfair-go/internal/numpy"
+	"github.com/nmichlo/norfair-go/pkg/norfairgo"
 )
 
 // mockTrackedObjectForPaths creates a mock TrackedObject for path testing

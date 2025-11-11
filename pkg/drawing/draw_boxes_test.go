@@ -540,6 +540,6 @@ func TestDrawBoxes_DirectColor_GoldenImage(t *testing.T) {
 	DrawBoxes(&frame, []interface{}{drawable2}, "blue", nil, false, nil, false, nil, nil, true, false)
 
 	// Compare to golden image
-	goldenPath := "../testdata/drawing/draw_boxes_direct_color_golden.png"
+	goldenPath := "../../testdata/drawing/draw_boxes_direct_color_golden.png"
 	testutil.CompareToGoldenImage(t, &frame, goldenPath, 0.95)
 }

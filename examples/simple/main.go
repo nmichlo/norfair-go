@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	norfairgo "github.com/nmichlo/norfair-go"
+	norfairgo "github.com/nmichlo/norfair-go/pkg/norfairgo"
 	"gonum.org/v1/gonum/mat"
 )
 
