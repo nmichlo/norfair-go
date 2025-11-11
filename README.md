@@ -165,7 +165,7 @@ package main
 import (
     "fmt"
     "log"
-    "github.com/nmichlo/norfair-go/pkg/drawing"
+	drawing "github.com/nmichlo/norfair-go/pkg/drawing"
     "github.com/nmichlo/norfair-go/pkg/norfairgo"
     "gocv.io/x/gocv"
     "gonum.org/v1/gonum/mat"

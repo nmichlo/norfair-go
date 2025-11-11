@@ -24,7 +24,7 @@
 package imaging
 
 import (
-	"github.com/nmichlo/norfair-go/pkg/color"
+	"github.com/nmichlo/norfair-go/pkg/norfairgocolor"
 )
 
 // =============================================================================
@@ -34,150 +34,150 @@ import (
 
 var (
 	// Basic colors
-	AliceBlue            = color.Color{255, 248, 240}
-	AntiqueWhite         = color.Color{215, 235, 250}
-	Aqua                 = color.Color{255, 255, 0}
-	Aquamarine           = color.Color{212, 255, 127}
-	Azure                = color.Color{255, 255, 240}
-	Beige                = color.Color{220, 245, 245}
-	Bisque               = color.Color{196, 228, 255}
-	Black                = color.Color{0, 0, 0}
-	BlanchedAlmond       = color.Color{205, 235, 255}
-	Blue                 = color.Color{255, 0, 0}
-	BlueViolet           = color.Color{226, 43, 138}
-	Brown                = color.Color{42, 42, 165}
-	BurlyWood            = color.Color{135, 184, 222}
-	CadetBlue            = color.Color{160, 158, 95}
-	Chartreuse           = color.Color{0, 255, 127}
-	Chocolate            = color.Color{30, 105, 210}
-	Coral                = color.Color{80, 127, 255}
-	CornflowerBlue       = color.Color{237, 149, 100}
-	Cornsilk             = color.Color{220, 248, 255}
-	Crimson              = color.Color{60, 20, 220}
-	Cyan                 = color.Color{255, 255, 0}
-	DarkBlue             = color.Color{139, 0, 0}
-	DarkCyan             = color.Color{139, 139, 0}
-	DarkGoldenrod        = color.Color{11, 134, 184}
-	DarkGray             = color.Color{169, 169, 169}
-	DarkGreen            = color.Color{0, 100, 0}
-	DarkKhaki            = color.Color{107, 183, 189}
-	DarkMagenta          = color.Color{139, 0, 139}
-	DarkOliveGreen       = color.Color{47, 107, 85}
-	DarkOrange           = color.Color{0, 140, 255}
-	DarkOrchid           = color.Color{204, 50, 153}
-	DarkRed              = color.Color{0, 0, 139}
-	DarkSalmon           = color.Color{122, 150, 233}
-	DarkSeaGreen         = color.Color{143, 188, 143}
-	DarkSlateBlue        = color.Color{139, 61, 72}
-	DarkSlateGray        = color.Color{79, 79, 47}
-	DarkTurquoise        = color.Color{209, 206, 0}
-	DarkViolet           = color.Color{211, 0, 148}
-	DeepPink             = color.Color{147, 20, 255}
-	DeepSkyBlue          = color.Color{255, 191, 0}
-	DimGray              = color.Color{105, 105, 105}
-	DodgerBlue           = color.Color{255, 144, 30}
-	FireBrick            = color.Color{34, 34, 178}
-	FloralWhite          = color.Color{240, 250, 255}
-	ForestGreen          = color.Color{34, 139, 34}
-	Fuchsia              = color.Color{255, 0, 255}
-	Gainsboro            = color.Color{220, 220, 220}
-	GhostWhite           = color.Color{255, 248, 248}
-	Gold                 = color.Color{0, 215, 255}
-	Goldenrod            = color.Color{32, 165, 218}
-	Gray                 = color.Color{128, 128, 128}
-	Green                = color.Color{0, 128, 0}
-	GreenYellow          = color.Color{47, 255, 173}
-	Honeydew             = color.Color{240, 255, 240}
-	HotPink              = color.Color{180, 105, 255}
-	IndianRed            = color.Color{92, 92, 205}
-	Indigo               = color.Color{130, 0, 75}
-	Ivory                = color.Color{240, 255, 255}
-	Khaki                = color.Color{140, 230, 240}
-	Lavender             = color.Color{250, 230, 230}
-	LavenderBlush        = color.Color{245, 240, 255}
-	LawnGreen            = color.Color{0, 252, 124}
-	LemonChiffon         = color.Color{205, 250, 255}
-	LightBlue            = color.Color{230, 216, 173}
-	LightCoral           = color.Color{128, 128, 240}
-	LightCyan            = color.Color{255, 255, 224}
-	LightGoldenrodYellow = color.Color{210, 250, 250}
-	LightGray            = color.Color{211, 211, 211}
-	LightGreen           = color.Color{144, 238, 144}
-	LightPink            = color.Color{193, 182, 255}
-	LightSalmon          = color.Color{122, 160, 255}
-	LightSeaGreen        = color.Color{170, 178, 32}
-	LightSkyBlue         = color.Color{250, 206, 135}
-	LightSlateGray       = color.Color{153, 136, 119}
-	LightSteelBlue       = color.Color{222, 196, 176}
-	LightYellow          = color.Color{224, 255, 255}
-	Lime                 = color.Color{0, 255, 0}
-	LimeGreen            = color.Color{50, 205, 50}
-	Linen                = color.Color{230, 240, 250}
-	Magenta              = color.Color{255, 0, 255}
-	Maroon               = color.Color{0, 0, 128}
-	MediumAquamarine     = color.Color{170, 205, 102}
-	MediumBlue           = color.Color{205, 0, 0}
-	MediumOrchid         = color.Color{211, 85, 186}
-	MediumPurple         = color.Color{219, 112, 147}
-	MediumSeaGreen       = color.Color{113, 179, 60}
-	MediumSlateBlue      = color.Color{238, 104, 123}
-	MediumSpringGreen    = color.Color{154, 250, 0}
-	MediumTurquoise      = color.Color{204, 209, 72}
-	MediumVioletRed      = color.Color{133, 21, 199}
-	MidnightBlue         = color.Color{112, 25, 25}
-	MintCream            = color.Color{250, 255, 245}
-	MistyRose            = color.Color{225, 228, 255}
-	Moccasin             = color.Color{181, 228, 255}
-	NavajoWhite          = color.Color{173, 222, 255}
-	Navy                 = color.Color{128, 0, 0}
-	OldLace              = color.Color{230, 245, 253}
-	Olive                = color.Color{0, 128, 128}
-	OliveDrab            = color.Color{35, 142, 107}
-	Orange               = color.Color{0, 165, 255}
-	OrangeRed            = color.Color{0, 69, 255}
-	Orchid               = color.Color{214, 112, 218}
-	PaleGoldenrod        = color.Color{170, 232, 238}
-	PaleGreen            = color.Color{152, 251, 152}
-	PaleTurquoise        = color.Color{238, 238, 175}
-	PaleVioletRed        = color.Color{147, 112, 219}
-	PapayaWhip           = color.Color{213, 239, 255}
-	PeachPuff            = color.Color{185, 218, 255}
-	Peru                 = color.Color{63, 133, 205}
-	Pink                 = color.Color{203, 192, 255}
-	Plum                 = color.Color{221, 160, 221}
-	PowderBlue           = color.Color{230, 224, 176}
-	Purple               = color.Color{128, 0, 128}
-	Red                  = color.Color{0, 0, 255}
-	RosyBrown            = color.Color{143, 143, 188}
-	RoyalBlue            = color.Color{225, 105, 65}
-	SaddleBrown          = color.Color{19, 69, 139}
-	Salmon               = color.Color{114, 128, 250}
-	SandyBrown           = color.Color{96, 164, 244}
-	SeaGreen             = color.Color{87, 139, 46}
-	Seashell             = color.Color{238, 245, 255}
-	Sienna               = color.Color{45, 82, 160}
-	Silver               = color.Color{192, 192, 192}
-	SkyBlue              = color.Color{235, 206, 135}
-	SlateBlue            = color.Color{205, 90, 106}
-	SlateGray            = color.Color{144, 128, 112}
-	Snow                 = color.Color{250, 250, 255}
-	SpringGreen          = color.Color{127, 255, 0}
-	SteelBlue            = color.Color{180, 130, 70}
-	Tan                  = color.Color{140, 180, 210}
-	Teal                 = color.Color{128, 128, 0}
-	Thistle              = color.Color{216, 191, 216}
-	Tomato               = color.Color{71, 99, 255}
-	Turquoise            = color.Color{208, 224, 64}
-	Violet               = color.Color{238, 130, 238}
-	Wheat                = color.Color{179, 222, 245}
-	White                = color.Color{255, 255, 255}
-	WhiteSmoke           = color.Color{245, 245, 245}
-	Yellow               = color.Color{0, 255, 255}
-	YellowGreen          = color.Color{50, 205, 154}
+	AliceBlue            = norfairgocolor.Color{255, 248, 240}
+	AntiqueWhite         = norfairgocolor.Color{215, 235, 250}
+	Aqua                 = norfairgocolor.Color{255, 255, 0}
+	Aquamarine           = norfairgocolor.Color{212, 255, 127}
+	Azure                = norfairgocolor.Color{255, 255, 240}
+	Beige                = norfairgocolor.Color{220, 245, 245}
+	Bisque               = norfairgocolor.Color{196, 228, 255}
+	Black                = norfairgocolor.Color{0, 0, 0}
+	BlanchedAlmond       = norfairgocolor.Color{205, 235, 255}
+	Blue                 = norfairgocolor.Color{255, 0, 0}
+	BlueViolet           = norfairgocolor.Color{226, 43, 138}
+	Brown                = norfairgocolor.Color{42, 42, 165}
+	BurlyWood            = norfairgocolor.Color{135, 184, 222}
+	CadetBlue            = norfairgocolor.Color{160, 158, 95}
+	Chartreuse           = norfairgocolor.Color{0, 255, 127}
+	Chocolate            = norfairgocolor.Color{30, 105, 210}
+	Coral                = norfairgocolor.Color{80, 127, 255}
+	CornflowerBlue       = norfairgocolor.Color{237, 149, 100}
+	Cornsilk             = norfairgocolor.Color{220, 248, 255}
+	Crimson              = norfairgocolor.Color{60, 20, 220}
+	Cyan                 = norfairgocolor.Color{255, 255, 0}
+	DarkBlue             = norfairgocolor.Color{139, 0, 0}
+	DarkCyan             = norfairgocolor.Color{139, 139, 0}
+	DarkGoldenrod        = norfairgocolor.Color{11, 134, 184}
+	DarkGray             = norfairgocolor.Color{169, 169, 169}
+	DarkGreen            = norfairgocolor.Color{0, 100, 0}
+	DarkKhaki            = norfairgocolor.Color{107, 183, 189}
+	DarkMagenta          = norfairgocolor.Color{139, 0, 139}
+	DarkOliveGreen       = norfairgocolor.Color{47, 107, 85}
+	DarkOrange           = norfairgocolor.Color{0, 140, 255}
+	DarkOrchid           = norfairgocolor.Color{204, 50, 153}
+	DarkRed              = norfairgocolor.Color{0, 0, 139}
+	DarkSalmon           = norfairgocolor.Color{122, 150, 233}
+	DarkSeaGreen         = norfairgocolor.Color{143, 188, 143}
+	DarkSlateBlue        = norfairgocolor.Color{139, 61, 72}
+	DarkSlateGray        = norfairgocolor.Color{79, 79, 47}
+	DarkTurquoise        = norfairgocolor.Color{209, 206, 0}
+	DarkViolet           = norfairgocolor.Color{211, 0, 148}
+	DeepPink             = norfairgocolor.Color{147, 20, 255}
+	DeepSkyBlue          = norfairgocolor.Color{255, 191, 0}
+	DimGray              = norfairgocolor.Color{105, 105, 105}
+	DodgerBlue           = norfairgocolor.Color{255, 144, 30}
+	FireBrick            = norfairgocolor.Color{34, 34, 178}
+	FloralWhite          = norfairgocolor.Color{240, 250, 255}
+	ForestGreen          = norfairgocolor.Color{34, 139, 34}
+	Fuchsia              = norfairgocolor.Color{255, 0, 255}
+	Gainsboro            = norfairgocolor.Color{220, 220, 220}
+	GhostWhite           = norfairgocolor.Color{255, 248, 248}
+	Gold                 = norfairgocolor.Color{0, 215, 255}
+	Goldenrod            = norfairgocolor.Color{32, 165, 218}
+	Gray                 = norfairgocolor.Color{128, 128, 128}
+	Green                = norfairgocolor.Color{0, 128, 0}
+	GreenYellow          = norfairgocolor.Color{47, 255, 173}
+	Honeydew             = norfairgocolor.Color{240, 255, 240}
+	HotPink              = norfairgocolor.Color{180, 105, 255}
+	IndianRed            = norfairgocolor.Color{92, 92, 205}
+	Indigo               = norfairgocolor.Color{130, 0, 75}
+	Ivory                = norfairgocolor.Color{240, 255, 255}
+	Khaki                = norfairgocolor.Color{140, 230, 240}
+	Lavender             = norfairgocolor.Color{250, 230, 230}
+	LavenderBlush        = norfairgocolor.Color{245, 240, 255}
+	LawnGreen            = norfairgocolor.Color{0, 252, 124}
+	LemonChiffon         = norfairgocolor.Color{205, 250, 255}
+	LightBlue            = norfairgocolor.Color{230, 216, 173}
+	LightCoral           = norfairgocolor.Color{128, 128, 240}
+	LightCyan            = norfairgocolor.Color{255, 255, 224}
+	LightGoldenrodYellow = norfairgocolor.Color{210, 250, 250}
+	LightGray            = norfairgocolor.Color{211, 211, 211}
+	LightGreen           = norfairgocolor.Color{144, 238, 144}
+	LightPink            = norfairgocolor.Color{193, 182, 255}
+	LightSalmon          = norfairgocolor.Color{122, 160, 255}
+	LightSeaGreen        = norfairgocolor.Color{170, 178, 32}
+	LightSkyBlue         = norfairgocolor.Color{250, 206, 135}
+	LightSlateGray       = norfairgocolor.Color{153, 136, 119}
+	LightSteelBlue       = norfairgocolor.Color{222, 196, 176}
+	LightYellow          = norfairgocolor.Color{224, 255, 255}
+	Lime                 = norfairgocolor.Color{0, 255, 0}
+	LimeGreen            = norfairgocolor.Color{50, 205, 50}
+	Linen                = norfairgocolor.Color{230, 240, 250}
+	Magenta              = norfairgocolor.Color{255, 0, 255}
+	Maroon               = norfairgocolor.Color{0, 0, 128}
+	MediumAquamarine     = norfairgocolor.Color{170, 205, 102}
+	MediumBlue           = norfairgocolor.Color{205, 0, 0}
+	MediumOrchid         = norfairgocolor.Color{211, 85, 186}
+	MediumPurple         = norfairgocolor.Color{219, 112, 147}
+	MediumSeaGreen       = norfairgocolor.Color{113, 179, 60}
+	MediumSlateBlue      = norfairgocolor.Color{238, 104, 123}
+	MediumSpringGreen    = norfairgocolor.Color{154, 250, 0}
+	MediumTurquoise      = norfairgocolor.Color{204, 209, 72}
+	MediumVioletRed      = norfairgocolor.Color{133, 21, 199}
+	MidnightBlue         = norfairgocolor.Color{112, 25, 25}
+	MintCream            = norfairgocolor.Color{250, 255, 245}
+	MistyRose            = norfairgocolor.Color{225, 228, 255}
+	Moccasin             = norfairgocolor.Color{181, 228, 255}
+	NavajoWhite          = norfairgocolor.Color{173, 222, 255}
+	Navy                 = norfairgocolor.Color{128, 0, 0}
+	OldLace              = norfairgocolor.Color{230, 245, 253}
+	Olive                = norfairgocolor.Color{0, 128, 128}
+	OliveDrab            = norfairgocolor.Color{35, 142, 107}
+	Orange               = norfairgocolor.Color{0, 165, 255}
+	OrangeRed            = norfairgocolor.Color{0, 69, 255}
+	Orchid               = norfairgocolor.Color{214, 112, 218}
+	PaleGoldenrod        = norfairgocolor.Color{170, 232, 238}
+	PaleGreen            = norfairgocolor.Color{152, 251, 152}
+	PaleTurquoise        = norfairgocolor.Color{238, 238, 175}
+	PaleVioletRed        = norfairgocolor.Color{147, 112, 219}
+	PapayaWhip           = norfairgocolor.Color{213, 239, 255}
+	PeachPuff            = norfairgocolor.Color{185, 218, 255}
+	Peru                 = norfairgocolor.Color{63, 133, 205}
+	Pink                 = norfairgocolor.Color{203, 192, 255}
+	Plum                 = norfairgocolor.Color{221, 160, 221}
+	PowderBlue           = norfairgocolor.Color{230, 224, 176}
+	Purple               = norfairgocolor.Color{128, 0, 128}
+	Red                  = norfairgocolor.Color{0, 0, 255}
+	RosyBrown            = norfairgocolor.Color{143, 143, 188}
+	RoyalBlue            = norfairgocolor.Color{225, 105, 65}
+	SaddleBrown          = norfairgocolor.Color{19, 69, 139}
+	Salmon               = norfairgocolor.Color{114, 128, 250}
+	SandyBrown           = norfairgocolor.Color{96, 164, 244}
+	SeaGreen             = norfairgocolor.Color{87, 139, 46}
+	Seashell             = norfairgocolor.Color{238, 245, 255}
+	Sienna               = norfairgocolor.Color{45, 82, 160}
+	Silver               = norfairgocolor.Color{192, 192, 192}
+	SkyBlue              = norfairgocolor.Color{235, 206, 135}
+	SlateBlue            = norfairgocolor.Color{205, 90, 106}
+	SlateGray            = norfairgocolor.Color{144, 128, 112}
+	Snow                 = norfairgocolor.Color{250, 250, 255}
+	SpringGreen          = norfairgocolor.Color{127, 255, 0}
+	SteelBlue            = norfairgocolor.Color{180, 130, 70}
+	Tan                  = norfairgocolor.Color{140, 180, 210}
+	Teal                 = norfairgocolor.Color{128, 128, 0}
+	Thistle              = norfairgocolor.Color{216, 191, 216}
+	Tomato               = norfairgocolor.Color{71, 99, 255}
+	Turquoise            = norfairgocolor.Color{208, 224, 64}
+	Violet               = norfairgocolor.Color{238, 130, 238}
+	Wheat                = norfairgocolor.Color{179, 222, 245}
+	White                = norfairgocolor.Color{255, 255, 255}
+	WhiteSmoke           = norfairgocolor.Color{245, 245, 245}
+	Yellow               = norfairgocolor.Color{0, 255, 255}
+	YellowGreen          = norfairgocolor.Color{50, 205, 154}
 )
 
 // ColorMap maps color names to Color values (lowercase for case-insensitive lookup).
-var ColorMap = map[string]color.Color{
+var ColorMap = map[string]norfairgocolor.Color{
 	"aliceblue":            AliceBlue,
 	"antiquewhite":         AntiqueWhite,
 	"aqua":                 Aqua,
@@ -326,7 +326,7 @@ var ColorMap = map[string]color.Color{
 
 // Tab10 palette (10 colors from Matplotlib).
 // Source: https://github.com/matplotlib/matplotlib/blob/main/lib/matplotlib/_cm.py
-var Tab10 = []color.Color{
+var Tab10 = []norfairgocolor.Color{
 	{214, 127, 31},  // Blue
 	{134, 86, 255},  // Orange
 	{113, 178, 44},  // Green
@@ -341,7 +341,7 @@ var Tab10 = []color.Color{
 
 // Tab20 palette (20 colors from Matplotlib).
 // Source: https://github.com/matplotlib/matplotlib/blob/main/lib/matplotlib/_cm.py
-var Tab20 = []color.Color{
+var Tab20 = []norfairgocolor.Color{
 	{214, 127, 31}, {228, 173, 95}, // Blue
 	{134, 86, 255}, {184, 154, 255}, // Orange
 	{113, 178, 44}, {153, 208, 104}, // Green
@@ -356,7 +356,7 @@ var Tab20 = []color.Color{
 
 // Colorblind palette (8 colorblind-friendly colors from Seaborn).
 // Source: https://github.com/mwaskom/seaborn/blob/master/seaborn/palettes.py
-var Colorblind = []color.Color{
+var Colorblind = []norfairgocolor.Color{
 	{30, 119, 180},  // Blue
 	{255, 158, 74},  // Orange
 	{153, 121, 44},  // Green

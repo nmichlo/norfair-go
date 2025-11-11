@@ -1,4 +1,4 @@
-package color
+package norfairgocolor
 
 import (
 	"image/color"
@@ -256,12 +256,12 @@ func TestHexToBGR_Lowercase(t *testing.T) {
 // TestHexToBGR_InvalidLength verifies error on invalid length
 func TestHexToBGR_InvalidLength(t *testing.T) {
 	invalidHexStrings := []string{
-		"#FF",     // Too short (2 chars)
-		"#FFFF",   // Invalid length (4 chars)
-		"#FFFFF",  // Invalid length (5 chars)
+		"#FF",      // Too short (2 chars)
+		"#FFFF",    // Invalid length (4 chars)
+		"#FFFFF",   // Invalid length (5 chars)
 		"#FFFFFFF", // Too long (7 chars)
-		"#F",      // Too short (1 char)
-		"",        // Empty
+		"#F",       // Too short (1 char)
+		"",         // Empty
 	}
 
 	for _, hex := range invalidHexStrings {

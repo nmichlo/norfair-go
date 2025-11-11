@@ -426,19 +426,19 @@ func (to *TrackedObject) LivePoints() []bool {
 }
 
 // GetLivePoints returns a boolean mask of which points are currently live.
-// Alias for LivePoints() required by drawing.TrackedObjectLike interface.
+// Alias for LivePoints() required by norfairgodraw.TrackedObjectLike interface.
 func (to *TrackedObject) GetLivePoints() []bool {
 	return to.LivePoints()
 }
 
 // GetID returns the object's permanent ID.
-// Required by drawing.TrackedObjectLike interface.
+// Required by norfairgodraw.TrackedObjectLike interface.
 func (to *TrackedObject) GetID() *int {
 	return to.ID
 }
 
 // GetLabel returns the object's label.
-// Required by drawing.TrackedObjectLike interface.
+// Required by norfairgodraw.TrackedObjectLike interface.
 func (to *TrackedObject) GetLabel() *string {
 	return to.Label
 }

@@ -6,7 +6,7 @@ frames using gocv.
 
 # Basic Usage
 
-	import "github.com/nmichlo/norfair-go/pkg/drawing"
+	import drawing "github.com/nmichlo/norfair-go/pkg/norfairgodraw"
 
 	// Draw tracked points
 	drawing.DrawPoints(frame, trackedObjects,
@@ -39,4 +39,4 @@ Drawer: Primitive drawing operations
 Color: RGBA with conversion utilities
 Path: Movement history tracking
 */
-package drawing
+package norfairgodraw

@@ -1,10 +1,10 @@
-package drawing
+package norfairgodraw
 
 import (
 	"testing"
 
 	"github.com/nmichlo/norfair-go/internal/testutil"
-	"github.com/nmichlo/norfair-go/pkg/color"
+	"github.com/nmichlo/norfair-go/pkg/norfairgocolor"
 	"gocv.io/x/gocv"
 	"gonum.org/v1/gonum/mat"
 )
@@ -225,7 +225,7 @@ func TestDrawPoints_DirectColorStruct(t *testing.T) {
 	result := DrawPoints(
 		&frame,
 		[]interface{}{drawable},
-		nil, nil, color.Red, false, nil, true, true, nil, nil, true, false,
+		nil, nil, norfairgocolor.Red, false, nil, true, true, nil, nil, true, false,
 	)
 
 	if result == nil {

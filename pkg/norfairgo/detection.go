@@ -135,19 +135,19 @@ func (d *Detection) UpdateCoordinateTransformation(coordTransform CoordinateTran
 }
 
 // GetPoints returns the detection points in relative coordinates.
-// Required by drawing.DetectionLike interface.
+// Required by norfairgodraw.DetectionLike interface.
 func (d *Detection) GetPoints() *mat.Dense {
 	return d.Points
 }
 
 // GetLabel returns the detection label.
-// Required by drawing.DetectionLike interface.
+// Required by norfairgodraw.DetectionLike interface.
 func (d *Detection) GetLabel() *string {
 	return d.Label
 }
 
 // GetScores returns the detection scores.
-// Required by drawing.DetectionLike interface.
+// Required by norfairgodraw.DetectionLike interface.
 func (d *Detection) GetScores() []float64 {
 	return d.Scores
 }

@@ -6,8 +6,8 @@ import (
 	"gocv.io/x/gocv"
 	"gonum.org/v1/gonum/mat"
 
-	"github.com/nmichlo/norfair-go/pkg/drawing"
 	"github.com/nmichlo/norfair-go/pkg/norfairgo"
+	"github.com/nmichlo/norfair-go/pkg/norfairgodraw"
 )
 
 // =============================================================================
@@ -473,7 +473,7 @@ func TestIntegration_EndToEndWorkflow(t *testing.T) {
 			}
 
 			radius := int(float64(max(frame.Rows(), frame.Cols())) * 0.01)
-			drawing.DrawPoints(
+			norfairgodraw.DrawPoints(
 				&frame,
 				drawables,
 				&radius,

@@ -1,4 +1,4 @@
-package drawing
+package norfairgodraw
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 	"math"
 	"math/rand"
 
-	colorpkg "github.com/nmichlo/norfair-go/pkg/color"
+	colorpkg "github.com/nmichlo/norfair-go/pkg/norfairgocolor"
 	"gocv.io/x/gocv"
 	"gonum.org/v1/gonum/mat"
 )

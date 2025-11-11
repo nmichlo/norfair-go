@@ -1,10 +1,10 @@
-package drawing
+package norfairgodraw
 
 import (
 	"testing"
 
 	"github.com/nmichlo/norfair-go/internal/imaging"
-	"github.com/nmichlo/norfair-go/pkg/color"
+	"github.com/nmichlo/norfair-go/pkg/norfairgocolor"
 )
 
 // =============================================================================
@@ -92,16 +92,16 @@ func TestParseColorName_ValidNames(t *testing.T) {
 		name     string
 		expected Color
 	}{
-		{"red", color.Red},
-		{"green", color.Green},
-		{"blue", color.Blue},
-		{"white", color.White},
-		{"black", color.Black},
-		{"Red", color.Red},     // Case insensitive
-		{"GREEN", color.Green}, // Case insensitive
-		{"BlUe", color.Blue},   // Mixed case
-		{"hotpink", color.HotPink},
-		{"cornflowerblue", color.CornflowerBlue},
+		{"red", norfairgocolor.Red},
+		{"green", norfairgocolor.Green},
+		{"blue", norfairgocolor.Blue},
+		{"white", norfairgocolor.White},
+		{"black", norfairgocolor.Black},
+		{"Red", norfairgocolor.Red},     // Case insensitive
+		{"GREEN", norfairgocolor.Green}, // Case insensitive
+		{"BlUe", norfairgocolor.Blue},   // Mixed case
+		{"hotpink", norfairgocolor.HotPink},
+		{"cornflowerblue", norfairgocolor.CornflowerBlue},
 	}
 
 	for _, tt := range tests {
@@ -146,7 +146,7 @@ func TestPalette_NewPalette(t *testing.T) {
 	}
 
 	// Test custom palette
-	customColors := []Color{color.Red, color.Green, color.Blue}
+	customColors := []Color{norfairgocolor.Red, norfairgocolor.Green, norfairgocolor.Blue}
 	p = NewPalette(customColors)
 	if len(p.colors) != 3 {
 		t.Errorf("Custom palette should have 3 colors, got %d", len(p.colors))
@@ -233,14 +233,14 @@ func TestPalette_SetDefaultColor(t *testing.T) {
 	p := NewPalette(nil)
 
 	// Change default color
-	p.SetDefaultColor(color.Red)
-	if p.defaultColor != color.Red {
+	p.SetDefaultColor(norfairgocolor.Red)
+	if p.defaultColor != norfairgocolor.Red {
 		t.Errorf("SetDefaultColor(Red) failed, default is %+v", p.defaultColor)
 	}
 
 	// Verify nil hashable uses new default
 	c := p.ChooseColor(nil)
-	if c != color.Red {
+	if c != norfairgocolor.Red {
 		t.Errorf("ChooseColor(nil) should return Red, got %+v", c)
 	}
 }
@@ -256,11 +256,11 @@ func TestColor_ToRGBA(t *testing.T) {
 		expectedG uint8
 		expectedB uint8
 	}{
-		{color.Red, 255, 0, 0},
-		{color.Green, 0, 128, 0},
-		{color.Blue, 0, 0, 255},
-		{color.White, 255, 255, 255},
-		{color.Black, 0, 0, 0},
+		{norfairgocolor.Red, 255, 0, 0},
+		{norfairgocolor.Green, 0, 128, 0},
+		{norfairgocolor.Blue, 0, 0, 255},
+		{norfairgocolor.White, 255, 255, 255},
+		{norfairgocolor.Black, 0, 0, 0},
 	}
 
 	for _, tt := range tests {

@@ -1,4 +1,4 @@
-package drawing
+package norfairgodraw
 
 import (
 	"fmt"
@@ -6,11 +6,11 @@ import (
 	"strings"
 
 	"github.com/nmichlo/norfair-go/internal/imaging"
-	"github.com/nmichlo/norfair-go/pkg/color"
+	"github.com/nmichlo/norfair-go/pkg/norfairgocolor"
 )
 
 // Color is an alias for color.Color (BGR format for OpenCV).
-type Color = color.Color
+type Color = norfairgocolor.Color
 
 // =============================================================================
 // Palette - Color selection via hashing
@@ -34,7 +34,7 @@ func NewPalette(colors []Color) *Palette {
 
 	return &Palette{
 		colors:       colors,
-		defaultColor: color.White,
+		defaultColor: norfairgocolor.White,
 	}
 }
 
@@ -83,7 +83,7 @@ func (p *Palette) SetDefaultColor(color Color) {
 // HexToBGR converts a hex color string to BGR Color.
 // Supports both 3-char (#RGB) and 6-char (#RRGGBB) formats.
 func HexToBGR(hex string) (Color, error) {
-	return color.HexToBGR(hex)
+	return norfairgocolor.HexToBGR(hex)
 }
 
 // ParseColorName looks up a color by name (case-insensitive).

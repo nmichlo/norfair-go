@@ -1,9 +1,9 @@
-package drawing
+package norfairgodraw
 
 import (
 	"image"
 
-	colorpkg "github.com/nmichlo/norfair-go/pkg/color"
+	colorpkg "github.com/nmichlo/norfair-go/pkg/norfairgocolor"
 	"gocv.io/x/gocv"
 )
 

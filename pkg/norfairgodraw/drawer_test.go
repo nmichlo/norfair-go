@@ -1,11 +1,11 @@
-package drawing
+package norfairgodraw
 
 import (
 	"image"
 	"testing"
 
 	"github.com/nmichlo/norfair-go/internal/testutil"
-	"github.com/nmichlo/norfair-go/pkg/color"
+	"github.com/nmichlo/norfair-go/pkg/norfairgocolor"
 	"gocv.io/x/gocv"
 	"gonum.org/v1/gonum/mat"
 )
@@ -41,7 +41,7 @@ func TestDrawer_Circle_AutoScaling(t *testing.T) {
 	defer frame.Close()
 
 	// Auto-scale: max(1000 * 0.005, 1) = 5
-	drawer.Circle(&frame, image.Point{X: 500, Y: 500}, 0, 0, color.Red)
+	drawer.Circle(&frame, image.Point{X: 500, Y: 500}, 0, 0, norfairgocolor.Red)
 
 	// No crash means success (visual validation would require comparing pixels)
 	if frame.Empty() {
@@ -55,7 +55,7 @@ func TestDrawer_Circle_ExplicitRadius(t *testing.T) {
 	defer frame.Close()
 
 	// Explicit radius=10, thickness=2
-	drawer.Circle(&frame, image.Point{X: 50, Y: 50}, 10, 2, color.Blue)
+	drawer.Circle(&frame, image.Point{X: 50, Y: 50}, 10, 2, norfairgocolor.Blue)
 
 	if frame.Empty() {
 		t.Error("Frame should not be empty after drawing")
@@ -68,7 +68,7 @@ func TestDrawer_Circle_FilledCircle(t *testing.T) {
 	defer frame.Close()
 
 	// Filled circle: thickness=-1
-	drawer.Circle(&frame, image.Point{X: 50, Y: 50}, 20, -1, color.Green)
+	drawer.Circle(&frame, image.Point{X: 50, Y: 50}, 20, -1, norfairgocolor.Green)
 
 	if frame.Empty() {
 		t.Error("Frame should not be empty after drawing")
@@ -81,7 +81,7 @@ func TestDrawer_Circle_SmallFrame(t *testing.T) {
 	defer frame.Close()
 
 	// Auto-scale on tiny frame: max(10 * 0.005, 1) = 1
-	drawer.Circle(&frame, image.Point{X: 5, Y: 5}, 0, 0, color.White)
+	drawer.Circle(&frame, image.Point{X: 5, Y: 5}, 0, 0, norfairgocolor.White)
 
 	if frame.Empty() {
 		t.Error("Frame should not be empty after drawing")
@@ -94,7 +94,7 @@ func TestDrawer_Circle_OutOfBounds(t *testing.T) {
 	defer frame.Close()
 
 	// Draw circle outside frame (gocv should handle gracefully)
-	drawer.Circle(&frame, image.Point{X: -50, Y: -50}, 10, 2, color.Red)
+	drawer.Circle(&frame, image.Point{X: -50, Y: -50}, 10, 2, norfairgocolor.Red)
 
 	if frame.Empty() {
 		t.Error("Frame should not be empty after drawing")
@@ -112,7 +112,7 @@ func TestDrawer_Text_AutoScaling(t *testing.T) {
 	defer frame.Close()
 
 	// Auto-scale: min(max(4000/4000, 0.5), 1.5) = min(max(1.0, 0.5), 1.5) = 1.0
-	drawer.Text(&frame, "Test", image.Point{X: 100, Y: 100}, 0, color.Red, 0, false, color.Black, 2)
+	drawer.Text(&frame, "Test", image.Point{X: 100, Y: 100}, 0, norfairgocolor.Red, 0, false, norfairgocolor.Black, 2)
 
 	if frame.Empty() {
 		t.Error("Frame should not be empty after drawing")
@@ -125,7 +125,7 @@ func TestDrawer_Text_WithShadow(t *testing.T) {
 	defer frame.Close()
 
 	// Draw text with shadow
-	drawer.Text(&frame, "Shadow", image.Point{X: 100, Y: 100}, 1.0, color.White, 2, true, color.Black, 3)
+	drawer.Text(&frame, "Shadow", image.Point{X: 100, Y: 100}, 1.0, norfairgocolor.White, 2, true, norfairgocolor.Black, 3)
 
 	if frame.Empty() {
 		t.Error("Frame should not be empty after drawing")
@@ -138,7 +138,7 @@ func TestDrawer_Text_WithoutShadow(t *testing.T) {
 	defer frame.Close()
 
 	// Draw text without shadow
-	drawer.Text(&frame, "No Shadow", image.Point{X: 100, Y: 200}, 1.0, color.Green, 2, false, color.Black, 0)
+	drawer.Text(&frame, "No Shadow", image.Point{X: 100, Y: 200}, 1.0, norfairgocolor.Green, 2, false, norfairgocolor.Black, 0)
 
 	if frame.Empty() {
 		t.Error("Frame should not be empty after drawing")
@@ -151,7 +151,7 @@ func TestDrawer_Text_EmptyString(t *testing.T) {
 	defer frame.Close()
 
 	// Empty string should not crash
-	drawer.Text(&frame, "", image.Point{X: 50, Y: 50}, 1.0, color.Red, 1, false, color.Black, 0)
+	drawer.Text(&frame, "", image.Point{X: 50, Y: 50}, 1.0, norfairgocolor.Red, 1, false, norfairgocolor.Black, 0)
 
 	if frame.Empty() {
 		t.Error("Frame should not be empty after drawing")
@@ -165,7 +165,7 @@ func TestDrawer_Text_LongString(t *testing.T) {
 
 	// Very long text
 	longText := "This is a very long text string that might exceed the frame width"
-	drawer.Text(&frame, longText, image.Point{X: 10, Y: 50}, 0.5, color.Blue, 1, false, color.Black, 0)
+	drawer.Text(&frame, longText, image.Point{X: 10, Y: 50}, 0.5, norfairgocolor.Blue, 1, false, norfairgocolor.Black, 0)
 
 	if frame.Empty() {
 		t.Error("Frame should not be empty after drawing")
@@ -178,7 +178,7 @@ func TestDrawer_Text_SmallFrame(t *testing.T) {
 	defer frame.Close()
 
 	// Auto-scale on small frame: min(max(100/4000, 0.5), 1.5) = 0.5
-	drawer.Text(&frame, "Small", image.Point{X: 10, Y: 50}, 0, color.Red, 0, false, color.Black, 0)
+	drawer.Text(&frame, "Small", image.Point{X: 10, Y: 50}, 0, norfairgocolor.Red, 0, false, norfairgocolor.Black, 0)
 
 	if frame.Empty() {
 		t.Error("Frame should not be empty after drawing")
@@ -195,7 +195,7 @@ func TestDrawer_Rectangle_Basic(t *testing.T) {
 	defer frame.Close()
 
 	// Draw rectangle
-	drawer.Rectangle(&frame, image.Point{X: 50, Y: 50}, image.Point{X: 150, Y: 150}, color.Red, 2)
+	drawer.Rectangle(&frame, image.Point{X: 50, Y: 50}, image.Point{X: 150, Y: 150}, norfairgocolor.Red, 2)
 
 	if frame.Empty() {
 		t.Error("Frame should not be empty after drawing")
@@ -208,7 +208,7 @@ func TestDrawer_Rectangle_ZeroThickness(t *testing.T) {
 	defer frame.Close()
 
 	// Zero thickness should default to 1
-	drawer.Rectangle(&frame, image.Point{X: 10, Y: 10}, image.Point{X: 100, Y: 100}, color.Blue, 0)
+	drawer.Rectangle(&frame, image.Point{X: 10, Y: 10}, image.Point{X: 100, Y: 100}, norfairgocolor.Blue, 0)
 
 	if frame.Empty() {
 		t.Error("Frame should not be empty after drawing")
@@ -221,7 +221,7 @@ func TestDrawer_Rectangle_FilledRectangle(t *testing.T) {
 	defer frame.Close()
 
 	// Filled rectangle: thickness=-1
-	drawer.Rectangle(&frame, image.Point{X: 20, Y: 20}, image.Point{X: 80, Y: 80}, color.Green, -1)
+	drawer.Rectangle(&frame, image.Point{X: 20, Y: 20}, image.Point{X: 80, Y: 80}, norfairgocolor.Green, -1)
 
 	if frame.Empty() {
 		t.Error("Frame should not be empty after drawing")
@@ -238,7 +238,7 @@ func TestDrawer_Line_Basic(t *testing.T) {
 	defer frame.Close()
 
 	// Draw line
-	drawer.Line(&frame, image.Point{X: 0, Y: 0}, image.Point{X: 200, Y: 200}, color.Red, 2)
+	drawer.Line(&frame, image.Point{X: 0, Y: 0}, image.Point{X: 200, Y: 200}, norfairgocolor.Red, 2)
 
 	if frame.Empty() {
 		t.Error("Frame should not be empty after drawing")
@@ -251,7 +251,7 @@ func TestDrawer_Line_Horizontal(t *testing.T) {
 	defer frame.Close()
 
 	// Horizontal line
-	drawer.Line(&frame, image.Point{X: 10, Y: 100}, image.Point{X: 190, Y: 100}, color.Blue, 3)
+	drawer.Line(&frame, image.Point{X: 10, Y: 100}, image.Point{X: 190, Y: 100}, norfairgocolor.Blue, 3)
 
 	if frame.Empty() {
 		t.Error("Frame should not be empty after drawing")
@@ -264,7 +264,7 @@ func TestDrawer_Line_Vertical(t *testing.T) {
 	defer frame.Close()
 
 	// Vertical line
-	drawer.Line(&frame, image.Point{X: 100, Y: 10}, image.Point{X: 100, Y: 190}, color.Green, 3)
+	drawer.Line(&frame, image.Point{X: 100, Y: 10}, image.Point{X: 100, Y: 190}, norfairgocolor.Green, 3)
 
 	if frame.Empty() {
 		t.Error("Frame should not be empty after drawing")
@@ -281,7 +281,7 @@ func TestDrawer_Cross_Basic(t *testing.T) {
 	defer frame.Close()
 
 	// Draw cross at center
-	drawer.Cross(&frame, image.Point{X: 100, Y: 100}, 20, color.Red, 2)
+	drawer.Cross(&frame, image.Point{X: 100, Y: 100}, 20, norfairgocolor.Red, 2)
 
 	if frame.Empty() {
 		t.Error("Frame should not be empty after drawing")
@@ -294,7 +294,7 @@ func TestDrawer_Cross_SmallRadius(t *testing.T) {
 	defer frame.Close()
 
 	// Small cross
-	drawer.Cross(&frame, image.Point{X: 50, Y: 50}, 5, color.Blue, 1)
+	drawer.Cross(&frame, image.Point{X: 50, Y: 50}, 5, norfairgocolor.Blue, 1)
 
 	if frame.Empty() {
 		t.Error("Frame should not be empty after drawing")
@@ -307,7 +307,7 @@ func TestDrawer_Cross_LargeRadius(t *testing.T) {
 	defer frame.Close()
 
 	// Large cross
-	drawer.Cross(&frame, image.Point{X: 250, Y: 250}, 100, color.Green, 3)
+	drawer.Cross(&frame, image.Point{X: 250, Y: 250}, 100, norfairgocolor.Green, 3)
 
 	if frame.Empty() {
 		t.Error("Frame should not be empty after drawing")
@@ -652,18 +652,18 @@ func TestDrawer_DrawingPrimitives_GoldenImage(t *testing.T) {
 	defer frame.Close()
 
 	// Test Circle (matches Python drawer.circle calls)
-	drawer.Circle(&frame, image.Point{X: 250, Y: 250}, 0, 0, color.Red)
-	drawer.Circle(&frame, image.Point{X: 100, Y: 100}, 20, 2, color.Green)
+	drawer.Circle(&frame, image.Point{X: 250, Y: 250}, 0, 0, norfairgocolor.Red)
+	drawer.Circle(&frame, image.Point{X: 100, Y: 100}, 20, 2, norfairgocolor.Green)
 
 	// Test Text (matches Python drawer.text calls)
-	drawer.Text(&frame, "Test", image.Point{X: 50, Y: 50}, 0, color.White, 0, false, color.Black, 0)
-	drawer.Text(&frame, "Shadow", image.Point{X: 50, Y: 100}, 1.0, color.White, 2, true, color.Black, 2)
+	drawer.Text(&frame, "Test", image.Point{X: 50, Y: 50}, 0, norfairgocolor.White, 0, false, norfairgocolor.Black, 0)
+	drawer.Text(&frame, "Shadow", image.Point{X: 50, Y: 100}, 1.0, norfairgocolor.White, 2, true, norfairgocolor.Black, 2)
 
 	// Test Rectangle (matches Python drawer.rectangle call)
-	drawer.Rectangle(&frame, image.Point{X: 10, Y: 10}, image.Point{X: 90, Y: 90}, color.Red, 2)
+	drawer.Rectangle(&frame, image.Point{X: 10, Y: 10}, image.Point{X: 90, Y: 90}, norfairgocolor.Red, 2)
 
 	// Test Line (matches Python drawer.line call)
-	drawer.Line(&frame, image.Point{X: 0, Y: 0}, image.Point{X: 100, Y: 100}, color.Cyan, 2)
+	drawer.Line(&frame, image.Point{X: 0, Y: 0}, image.Point{X: 100, Y: 100}, norfairgocolor.Cyan, 2)
 
 	// Compare to golden image (95% similarity threshold for anti-aliasing tolerance)
 	// Golden image generated from Python norfair using tools/validate_drawing/main.py
