@@ -1,4 +1,4 @@
-# 🎯 norfair-go
+# norfair-go
 
 **Real-time multi-object tracking for Go**
 
@@ -8,7 +8,7 @@
 
 ---
 
-> **⚠️ Disclaimer:** This is an unofficial Go port of Python's [norfair](https://github.com/tryolabs/norfair) object tracking library. This project is **NOT** affiliated with, endorsed by, or associated with Tryolabs or the original norfair development team. All credit for the original design and algorithms goes to the original norfair authors.
+> **Disclaimer:** This is an unofficial Go port of Python's [norfair](https://github.com/tryolabs/norfair) object tracking library. This project is **NOT** affiliated with, endorsed by, or associated with Tryolabs or the original norfair development team. All credit for the original design and algorithms goes to the original norfair authors.
 
 ---
 
@@ -21,14 +21,37 @@
 - **Type-safe API:** Compile-time validation of tracking configurations
 - **Comprehensive Tests:** Comprehensive test coverage and benchmarks ensuring 1:1 equivalence with the original norfair library
 
-## Features
+### Related Projects
 
-- 🔍 **Flexible Distance Functions:** IoU, Euclidean, Manhattan, Cosine, Custom Functions, and more+
-- 🎛️ **Multiple Filtering Options:** Optimized Kalman filter, full filterpy-equivalent Kalman, or no filtering
-- 🎥 **Video I/O:** Read/write video files with progress tracking and OpenCV integration
-- 🎨 **Visualization:** Draw bounding boxes, keypoints, and motion trails with customizable colors
-- 📹 **Camera Motion Compensation:** Support for translation, homography, and optical flow-based transformations
-- 🔄 **Re-identification:** Optional feature embedding for robust identity matching
+- **[norfair](https://github.com/tryolabs/norfair)** - Original Python implementation by Tryolabs
+- **[norfair-rs](https://github.com/nmichlo/norfair-rs)** - Rust port of norfair (sibling project, even faster for large workloads)
+
+### Features
+
+- **Flexible Distance Functions:** IoU, Euclidean, Manhattan, Cosine, Custom Functions, and more
+- **Multiple Filtering Options:** Optimized Kalman filter, full filterpy-equivalent Kalman, or no filtering
+- **Video I/O:** Read/write video files with progress tracking and OpenCV integration
+- **Visualization:** Draw bounding boxes, keypoints, and motion trails with customizable colors
+- **Camera Motion Compensation:** Support for translation, homography, and optical flow-based transformations
+- **Re-identification:** Optional feature embedding for robust identity matching
+
+### Benchmarks
+
+Cross-language performance comparison (IoU distance, OptimizedKalmanFilter):
+
+| Scenario | Frames | Detections | Python | Go | Rust |
+|----------|--------|------------|--------|-----|------|
+| Small | 100 | 446 | 5,077 fps | **252,578 fps** | 148,469 fps |
+| Medium | 500 | 9,015 | 560 fps | **35,195 fps** | 63,497 fps |
+| Large | 1,000 | 44,996 | 105 fps | **3,934 fps** | 32,778 fps |
+| Stress | 2,000 | 179,789 | 28 fps | **546 fps** | 16,510 fps |
+
+**Speedup vs Python:** 20-50x depending on scenario complexity.
+
+Benchmarks run on Apple M3 Pro. See `../norfair-rust/examples/benchmark/` for reproduction scripts.
+
+
+---
 
 ## Installation
 
@@ -95,7 +118,7 @@ func main() {
 ```
 
 <details>
-<summary><b>🐍 Python Norfair Equivalent</b></summary>
+<summary><b>Python Norfair Equivalent</b></summary>
 
 Here's how the same tracking workflow looks in the original Python norfair library:
 
@@ -143,6 +166,92 @@ Both implementations provide the same core functionality with similar performanc
 
 </details>
 
+## Configuration Options
+
+```go
+import "github.com/nmichlo/norfair-go/pkg/norfairgo"
+
+tracker, err := norfairgo.NewTracker(&norfairgo.TrackerConfig{
+    // Distance function
+    DistanceFunction:  norfairgo.DistanceByName("iou"),
+    DistanceThreshold: 0.5,
+
+    // Tracking behavior
+    HitCounterMax:          15,  // Frames to keep tracking without detection
+    InitializationDelay:    3,   // Detections required to initialize
+    PointwiseHitCounterMax: 4,   // Per-point tracking threshold
+    DetectionThreshold:     0.5, // Minimum detection confidence
+    PastDetectionsLength:   4,   // History for re-identification
+
+    // Re-identification (optional)
+    ReidDistanceFunction:  norfairgo.DistanceByName("euclidean"),
+    ReidDistanceThreshold: 100.0,
+    ReidHitCounterMax:     50,
+
+    // Kalman filter
+    FilterFactory: norfairgo.NewOptimizedKalmanFilterFactory(
+        4.0,  // R (measurement noise)
+        0.1,  // Q (process noise)
+        10.0, // P (initial covariance)
+        0.0,  // pos_variance
+        1.0,  // vel_variance
+    ),
+})
+```
+
+## Distance Functions
+
+Built-in distance functions available via `DistanceByName()`:
+
+| Name | Description | Use Case |
+|------|-------------|----------|
+| `"euclidean"` | L2 distance between points | Single-point tracking |
+| `"iou"` | 1 - Intersection over Union | Bounding box tracking |
+| `"mean_euclidean"` | Average L2 across all points | Multi-keypoint tracking |
+| `"mean_manhattan"` | Average L1 across all points | Grid-aligned tracking |
+| `"frobenius"` | Frobenius norm of difference | Matrix comparison |
+
+Custom distance functions can be implemented via the `Distance` interface.
+
+## Filter Options
+
+Three filter types are available:
+
+```go
+import "github.com/nmichlo/norfair-go/pkg/norfairgo"
+
+// Fast, simplified Kalman (default)
+norfairgo.NewOptimizedKalmanFilterFactory(r, q, p, posVar, velVar)
+
+// Full filterpy-compatible Kalman
+norfairgo.NewFilterPyKalmanFilterFactory(r, q)
+
+// No prediction (detection-only)
+norfairgo.NoFilterFactory{}
+```
+
+## API Documentation
+
+Full API documentation is available at [pkg.go.dev/github.com/nmichlo/norfair-go](https://pkg.go.dev/github.com/nmichlo/norfair-go).
+
+### Core Types
+
+- **`Tracker`** - Main tracking engine that maintains object identities across frames
+- **`Detection`** - Input from object detector (bounding boxes, keypoints, or arbitrary points)
+- **`TrackedObject`** - Output object with stable ID, position estimate, and tracking metadata
+- **`Video`** - Video I/O with progress tracking and codec selection
+- **`drawing.*`** - Visualization utilities for rendering tracked objects
+
+### Camera Motion
+
+```go
+import "github.com/nmichlo/norfair-go/pkg/norfairgo"
+
+// Compensate for camera movement
+transform := norfairgo.NewTranslationTransformation(dx, dy)
+trackedObjects := tracker.Update(detections, 1, transform)
+```
+
 ## Examples
 
 This repository includes several working examples in the [`examples/`](examples/) directory:
@@ -154,10 +263,8 @@ Since functionality is intended to mirror the original norfair library, you can 
 
 - [original norfair examples](https://github.com/tryolabs/norfair/tree/master/demos).
 
-For a more advanced Go example demonstrating video processing, YOLO detection integration, and motion path visualization, see below:
-
 <details>
-<summary><b>🛠 Detailed Go Example</b></summary>
+<summary><b>Detailed Go Example</b></summary>
 
 ```go
 package main
@@ -165,7 +272,7 @@ package main
 import (
     "fmt"
     "log"
-	drawing "github.com/nmichlo/norfair-go/pkg/drawing"
+    drawing "github.com/nmichlo/norfair-go/pkg/drawing"
     "github.com/nmichlo/norfair-go/pkg/norfairgo"
     "gocv.io/x/gocv"
     "gonum.org/v1/gonum/mat"
@@ -263,7 +370,7 @@ func main() {
         }
     }
 
-    fmt.Println("✓ Processing complete!")
+    fmt.Println("Processing complete!")
     fmt.Printf("Tracked objects across %d frames\n", frameNum)
 }
 
@@ -281,18 +388,6 @@ type DetectionResult struct {
 ```
 
 </details>
-
-## Documentation
-
-Full API documentation is available at [pkg.go.dev/github.com/nmichlo/norfair-go](https://pkg.go.dev/github.com/nmichlo/norfair-go).
-
-### Core Types
-
-- **`Tracker`** - Main tracking engine that maintains object identities across frames
-- **`Detection`** - Input from object detector (bounding boxes, keypoints, or arbitrary points)
-- **`TrackedObject`** - Output object with stable ID, position estimate, and tracking metadata
-- **`Video`** - Video I/O with progress tracking and codec selection
-- **`drawing.*`** - Visualization utilities for rendering tracked objects
 
 ## License & Attribution
 
