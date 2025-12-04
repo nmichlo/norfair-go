@@ -127,9 +127,10 @@ func NewTracker(config *TrackerConfig) (*Tracker, error) {
 	}
 
 	if config.FilterFactory == nil {
+		// Default parameters must match Python's OptimizedKalmanFilterFactory defaults
 		config.FilterFactory = NewOptimizedKalmanFilterFactory(
-			1.0,  // R_mult
-			1.0,  // Q_mult
+			4.0,  // R_mult (measurement noise) - Python default is 4.0
+			0.1,  // Q_mult (process noise) - Python default is 0.1
 			10.0, // pos_var
 			0.0,  // pos_vel_cov
 			1.0,  // vel_var
