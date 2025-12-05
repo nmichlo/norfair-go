@@ -26,6 +26,10 @@ type TrackerConfigJSON struct {
 	DistanceThreshold   float64 `json:"distance_threshold"`
 	HitCounterMax       int     `json:"hit_counter_max"`
 	InitializationDelay int     `json:"initialization_delay"`
+	// ReID configuration (optional)
+	ReidDistanceFunction  *string  `json:"reid_distance_function,omitempty"`
+	ReidDistanceThreshold *float64 `json:"reid_distance_threshold,omitempty"`
+	ReidHitCounterMax     *int     `json:"reid_hit_counter_max,omitempty"`
 }
 
 type Step struct {
@@ -55,6 +59,7 @@ type TrackedObjectJSON struct {
 	Age            int         `json:"age"`
 	HitCounter     int         `json:"hit_counter"`
 	IsInitializing bool        `json:"is_initializing"`
+	ReidHitCounter *int        `json:"reid_hit_counter,omitempty"`
 }
 
 // ============================================================================
@@ -97,12 +102,24 @@ func loadFixture(scenario string) (*Fixture, error) {
 }
 
 func createTracker(config TrackerConfigJSON) (*Tracker, error) {
-	return NewTracker(&TrackerConfig{
+	trackerConfig := &TrackerConfig{
 		DistanceFunction:    DistanceByName(config.DistanceFunction),
 		DistanceThreshold:   config.DistanceThreshold,
 		HitCounterMax:       config.HitCounterMax,
 		InitializationDelay: config.InitializationDelay,
-	})
+	}
+
+	// Add ReID config if present
+	if config.ReidDistanceThreshold != nil {
+		// Use the same distance function for ReID (euclidean for euclidean fixtures)
+		trackerConfig.ReidDistanceFunction = DistanceByName(config.DistanceFunction)
+		trackerConfig.ReidDistanceThreshold = *config.ReidDistanceThreshold
+	}
+	if config.ReidHitCounterMax != nil {
+		trackerConfig.ReidHitCounterMax = config.ReidHitCounterMax
+	}
+
+	return NewTracker(trackerConfig)
 }
 
 func compareTrackedObjects(
@@ -172,6 +189,22 @@ func compareTrackedObjects(
 		if exp.IsInitializing != act.IsInitializing {
 			return fmt.Errorf("Step %d frame %d: Object %d is_initializing mismatch: expected %v, got %v",
 				stepIdx, frameID, i, exp.IsInitializing, act.IsInitializing)
+		}
+
+		// Compare reid_hit_counter
+		if exp.ReidHitCounter != nil || act.ReidHitCounter != nil {
+			expReid := -1
+			actReid := -1
+			if exp.ReidHitCounter != nil {
+				expReid = *exp.ReidHitCounter
+			}
+			if act.ReidHitCounter != nil {
+				actReid = *act.ReidHitCounter
+			}
+			if expReid != actReid {
+				return fmt.Errorf("Step %d frame %d: Object %d reid_hit_counter mismatch: expected %d, got %d",
+					stepIdx, frameID, i, expReid, actReid)
+			}
 		}
 
 		// Compare estimates (with tolerance)
@@ -324,4 +357,20 @@ func TestFixture_Small(t *testing.T) {
 
 func TestFixture_Medium(t *testing.T) {
 	runFixtureTest(t, "medium")
+}
+
+func TestFixture_EuclideanSmall(t *testing.T) {
+	runFixtureTest(t, "euclidean_small")
+}
+
+func TestFixture_FastInit(t *testing.T) {
+	runFixtureTest(t, "fast_init")
+}
+
+func TestFixture_IouOcclusion(t *testing.T) {
+	runFixtureTest(t, "iou_occlusion")
+}
+
+func TestFixture_ReidEuclidean(t *testing.T) {
+	runFixtureTest(t, "reid_euclidean")
 }
