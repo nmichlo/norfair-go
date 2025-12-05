@@ -39,17 +39,16 @@
 
 Cross-language performance comparison (IoU distance, OptimizedKalmanFilter):
 
-| Scenario | Frames | Detections | Python | Go | Rust |
-|----------|--------|------------|--------|-----|------|
-| Small | 100 | 446 | 5,077 fps | **252,578 fps** | 148,469 fps |
-| Medium | 500 | 9,015 | 560 fps | **35,195 fps** | 63,497 fps |
-| Large | 1,000 | 44,996 | 105 fps | **3,934 fps** | 32,778 fps |
-| Stress | 2,000 | 179,789 | 28 fps | **546 fps** | 16,510 fps |
+| Scenario | Frames | Detections | norfair | norfair-go | norfair-rs (python) | norfair-rs (rust) |
+|----------|--------|------------|---------|------------|---------------------|-------------------|
+| Small | 100 | 446 | 4,700 fps | **243,000 fps** | 107,000 fps | 296,000 fps |
+| Medium | 500 | 9,015 | 540 fps | **31,000 fps** | 27,000 fps | 89,000 fps |
+| Large | 1,000 | 44,996 | 101 fps | **3,800 fps** | 11,000 fps | 41,000 fps |
+| Stress | 2,000 | 179,789 | — | **547 fps** | 5,200 fps | 18,500 fps |
 
-**Speedup vs Python:** 20-50x depending on scenario complexity.
+**Speedup norfair-go vs norfair:** 50-60x for small/medium scenarios.
 
-Benchmarks run on Apple M3 Pro. See `../norfair-rust/examples/benchmark/` for reproduction scripts.
-
+Benchmarks run on Apple M3 Pro. See [norfair-rs](https://github.com/nmichlo/norfair-rs) for reproduction scripts.
 
 ---
 
