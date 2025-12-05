@@ -6,6 +6,7 @@ import (
 	"math"
 	"os"
 	"path/filepath"
+	"sort"
 	"testing"
 
 	"gonum.org/v1/gonum/mat"
@@ -245,6 +246,9 @@ func runFixtureTest(t *testing.T, scenario string) {
 		t.Fatalf("Failed to create tracker: %v", err)
 	}
 
+	// Reset the global counter for deterministic testing
+	ResetGlobalCount()
+
 	// Tolerance for numerical comparisons
 	// Start strict per CLAUDE.md guidance - loosen only if there are real precision differences
 	tolerance := 1e-6
@@ -281,11 +285,25 @@ func runFixtureTest(t *testing.T, scenario string) {
 		}
 
 		// Compare all_objects (all internal objects including initializing)
+		// Sort by initializing_id to ensure consistent ordering for comparison
+		allObjects := make([]*TrackedObject, len(tracker.TrackedObjects))
+		copy(allObjects, tracker.TrackedObjects)
+		sort.Slice(allObjects, func(i, j int) bool {
+			iID := -1
+			jID := -1
+			if allObjects[i].InitializingID != nil {
+				iID = *allObjects[i].InitializingID
+			}
+			if allObjects[j].InitializingID != nil {
+				jID = *allObjects[j].InitializingID
+			}
+			return iID < jID
+		})
 		if err := compareTrackedObjects(
 			stepIdx,
 			step.FrameID,
 			step.Outputs.AllObjects,
-			tracker.TrackedObjects,
+			allObjects,
 			"all_objects",
 			tolerance,
 		); err != nil {
