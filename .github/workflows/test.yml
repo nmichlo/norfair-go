@@ -47,25 +47,14 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
-  # The branch-protection gate. A required status check is matched by name, and
-  # `go-test` is a matrix job, so its check is "go-test (1.24.x)" -- it changes
-  # the moment the Go version list does, and a required check that stops
-  # reporting blocks every PR forever. This job is plain, so its check is
-  # always exactly "test".
+  # The branch-protection gate; see nmichlo/.github/actions/gate for why it
+  # exists. `always()` is required, or the gate is skipped when what it guards
+  # fails -- and a skipped required check counts as success.
   test:
     needs: [go-test]
-    # always(), or the gate is skipped when what it guards fails -- and a
-    # skipped required check counts as success.
     if: always()
     runs-on: ubuntu-latest
     steps:
-      # `skipped` counts as failure too: a job that did not run has not passed,
-      # and a gate that lets it through is worse than no gate. Actions prints
-      # `env:` into the run group, so the log shows which it was.
-      - name: Check results
-        env:
-          FAILED: >-
-            ${{ contains(needs.*.result, 'failure')
-             || contains(needs.*.result, 'cancelled')
-             || contains(needs.*.result, 'skipped') }}
-        run: '[ "${FAILED}" = "false" ]'
+      - uses: nmichlo/.github/actions/gate@main
+        with:
+          needs: ${{ toJSON(needs) }}
