@@ -7,7 +7,7 @@ on:
   pull_request:
 
 jobs:
-  test:
+  go-test:
     runs-on: ubuntu-latest
     container: ghcr.io/hybridgroup/opencv:4.12.0
     strategy:
@@ -37,3 +37,25 @@ jobs:
           fail_ci_if_error: false
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+  # The branch-protection gate. A required status check is matched by name, and
+  # `go-test` is a matrix job, so its check is "go-test (1.24.x)" -- it changes
+  # the moment the Go version list does, and a required check that stops
+  # reporting blocks every PR forever. This job is plain, so its check is
+  # always exactly "test".
+  test:
+    needs: [go-test]
+    # always(), or the gate is skipped when what it guards fails -- and a
+    # skipped required check counts as success.
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check results
+        env:
+          RESULTS: ${{ join(needs.*.result, ' ') }}
+        run: |
+          echo "results: ${RESULTS}"
+          read -r -a outcomes <<< "${RESULTS}"
+          for outcome in "${outcomes[@]}"; do
+            [ "${outcome}" = "success" ] || exit 1
+          done
