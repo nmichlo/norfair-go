@@ -14,6 +14,9 @@ permissions:
 jobs:
   go-test:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write  # codecov OIDC upload
     container: ghcr.io/hybridgroup/opencv:4.12.0
     strategy:
       matrix:
@@ -37,15 +40,16 @@ jobs:
         run: go test -race -coverprofile=coverage.out -covermode=atomic ./...
 
 
+      # v5 + OIDC: there is no CODECOV_TOKEN in this repo, and v4 has no
+      # tokenless path for pushes to the base repo.
       - name: codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         if: matrix.go-version == '1.24.x'
         with:
-          file: ./coverage.out
+          files: ./coverage.out
           flags: unittests
+          use_oidc: true
           fail_ci_if_error: false
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   # The branch-protection gate; see nmichlo/.github/actions/gate for why it
   # exists. `always()` is required, or the gate is skipped when what it guards
